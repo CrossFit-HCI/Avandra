@@ -1,16 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {Button, Text, View} from 'react-native';
-import { closeNav, openNav, useAppDispatch, useAppSelector } from "./NavState";
-import navStore, { RootState } from './Store';
-import { Provider } from 'react-redux';
+import { navClosed, navOpened } from "./NavState";
 
 export interface NavProps {
   children: ReactNode;
 }
 
 const Nav = ({children}:NavProps) => {
-  const navStatus = useAppSelector((state:RootState) => state.nav.navStatus);
-  const dispatch = useAppDispatch();
+  const [navStatus, setaNavStatus] = useState(navOpened);  
 
   let navHeight = '50%';
   let navBottom = navStatus.status == 'opened' ? '0%' : '-42%';
@@ -23,32 +20,42 @@ const Nav = ({children}:NavProps) => {
           width: '100%',
           justifyContent: 'center',      
           alignItems: 'center',
-          backgroundColor: 'grey',
+          backgroundColor: 'lightgrey',
           position: 'absolute',
           bottom: navBottom,        
         }
       }>
-        <Text
+        <View
           style={{
-            fontSize: 20,
+            height: 30,
+            width: '100%',
+            justifyContent: 'center',      
+            alignItems: 'center',
+            backgroundColor: 'grey',
             position: 'absolute',
-            top: 10,
-          }}>
-            The Nav is {navMsg}
-        </Text>            
-        <Button title="Open Nav"  onPress={() => dispatch(openNav())}/>
-        <Button title="Close Nav" onPress={() => dispatch(closeNav())}/>
+            top: 0
+          }
+        }>
+          <Text
+            style={{
+              fontSize: 20,
+              position: 'absolute',
+              top: 0,
+            }}>
+              The Nav is {navMsg}
+          </Text>            
+          <Button 
+            title="Toggle Nav"  onPress={() => navStatus.status == 'opened' ? setaNavStatus(navOpened) : setaNavStatus(navClosed)}/>
+        </View>        
         {children}
-      </View>
+      </View>      
   )
 }
 
 export default ({children}:NavProps) => {
   return (
-    <Provider store={navStore}>
-      <Nav>
+    <Nav>
         {children}
-      </Nav>
-    </Provider>
+    </Nav>
   )
 }
