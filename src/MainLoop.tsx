@@ -4,6 +4,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 
 import Nav from "./Nav";
 import { NavigationContainer } from '@react-navigation/native';
+import NaviButton from './NavButtons';
 
 type AVRootStackParams = {
   Forecast: undefined;
@@ -30,7 +31,7 @@ const Forecast = ({ route, navigation }:ForecastScreenProps) => {
           }}>Forecast</Text>
 
         <Nav>
-          <Button
+          <NaviButton
             onPress={() => navigation.navigate('JournalList')}
             title="Journals"
           />
@@ -54,7 +55,7 @@ const JournalList = ({ route, navigation }:JournalListScreenProps) => {
       <Nav>
           <Text>Journal List Nav</Text>
 
-          <Button
+          <NaviButton
             onPress={() => navigation.navigate('Forecast')}
             title="Forecast"
           />
