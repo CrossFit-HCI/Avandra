@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "./NavStore";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { ReactNode } from "react";
+import { ReactNode, createContext } from "react";
 
 interface NavOpened {
     status: 'opened';
@@ -28,6 +28,9 @@ interface NavContext {
 export const initialNavContext: NavContext = {
     screens: []
 }
+
+// Setup the screens context with just `children` in it.
+export const NavContext = createContext(initialNavContext);
 
 interface NavState {
     navStatus: NavStatus,    

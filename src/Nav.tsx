@@ -1,6 +1,6 @@
 import React, { ReactNode, Children, createContext, useContext } from 'react';
 import {Button, View} from 'react-native';
-import { toggleNav, useAppDispatch, useAppSelector, NavScreenState, injectScreens, setMainView, initialNavContext } from "./NavState";
+import { toggleNav, useAppDispatch, useAppSelector, NavScreenState, injectScreens, setMainView, NavContext } from "./NavState";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 import navStore, { RootState } from './NavStore';
 import { Provider } from 'react-redux';
@@ -10,24 +10,25 @@ interface NavViewProps {
 }
 
 const NavView = () => {
+  // Setup the Nav's toggle button's callback:
   const navStatus = useAppSelector((state:RootState) => state.nav.navStatus);  
-  const currentScreen: React.ReactNode = useAppSelector((state:RootState) => {
-    let currentScreen = state.nav.currentScreen;
-    if (currentScreen) {
-      return currentScreen.view;
-    } else {
-      throw new Error ('NavView/currentScreen: currentScreen is undefined.');
-    }
-  });
   const dispatch = useAppDispatch();    
   const toggleNavStatus = () => dispatch(toggleNav())
 
+  // Setup the current screen of the Nav:
+  const screens = useContext(NavContext).screens;
+  const screenPtr: number = useAppSelector((state:RootState) => {
+    return state.nav.screensPtr;
+  });
+  const currentScreen = screens[screenPtr].view;  
+
+  // Used to hide and show part of the Nav; this mimics the Nav being open or
+  // closed.
   let navHeight = '50%';
   let navBottom = navStatus.status == 'opened' ? '0%' : '-42%';  
 
   return (    
-      <View style={navContainerViewStyle(navHeight, navBottom).container}>
-          
+      <View style={navContainerViewStyle(navHeight, navBottom).container}>          
         <View
           style={navContainerBarViewStyle.container}>                    
           <Button 
@@ -81,21 +82,22 @@ export const NavStackComp = ({children}:NavProps) => {
     } else {
       throw new Error ('A NavScreen is the only component allowable in the Nav.')
     }    
-  }, [])
-  const dispatch = useAppDispatch();  
+  }, [])  
 
-  dispatch(injectScreens(screens));
+  // Inject the screens into the Nav:
+  const dispatch = useAppDispatch();  
+  dispatch(injectScreens(screens.length));
 
   return (
-      <NavView />          
+    <NavContext.Provider value={{screens: screens}}>
+      <NavView />
+    </NavContext.Provider>          
   )
 }
 
 export default ({children}:NavProps) => {
   const dispatch = useAppDispatch();  
-
-  // Setup the screens context with just `children` in it.
-  const NavContext = createContext(initialNavContext);
+  
   let mainScreen = {screens: [{id: 'main', view: children}]};
 
   // Setup the state.

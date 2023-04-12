@@ -15,7 +15,6 @@ type ForecastScreenProps = NativeStackScreenProps<AVRootStackParams, 'Forecast'>
 
 const Forecast = ({ navigation }:ForecastScreenProps) => {
   return (
-    <NavCommContainer>
       <View
         style={{
           flex: 1,
@@ -37,30 +36,29 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
             title="Journals" />
         </Nav>                
       </View>
-     </NavCommContainer> 
   )
 }
 
 type JournalListScreenProps = NativeStackScreenProps<AVRootStackParams, 'JournalList'>;
 
 const JournalList = ({ navigation }:JournalListScreenProps) => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }}>
-      <Text>Journal List</Text>
+  return (    
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+      }}>
+        <Text>Journal List</Text>
 
-      <Nav>
-          <Text>Journal List Nav</Text>
+        <Nav>
+            <Text>Journal List Nav</Text>
 
-          <NaviButton
-            onPress={() => navigation.navigate('Forecast')}
-            title="Forecast" />
-      </Nav>
-    </View>
+            <NaviButton
+              onPress={() => navigation.navigate('Forecast')}
+              title="Forecast" />
+        </Nav>
+      </View>
   )
 };
 
@@ -72,12 +70,14 @@ const AVScreenStack = createNativeStackNavigator<AVRootStackParams>();
 
 const MainLoop = () => {    
   return (
-    <NavigationContainer>
-      <AVScreenStack.Navigator screenOptions={{headerShown: false }}>
-          <AVScreenStack.Screen name="Forecast" component={Forecast} />          
-          <AVScreenStack.Screen name="JournalList" component={JournalList}/>
-      </AVScreenStack.Navigator>
-    </NavigationContainer>
+    <NavCommContainer>
+      <NavigationContainer>
+        <AVScreenStack.Navigator screenOptions={{headerShown: false }}>
+            <AVScreenStack.Screen name="Forecast" component={Forecast} />          
+            <AVScreenStack.Screen name="JournalList" component={JournalList}/>
+        </AVScreenStack.Navigator>
+      </NavigationContainer>
+    </NavCommContainer>
   )
 };
 
