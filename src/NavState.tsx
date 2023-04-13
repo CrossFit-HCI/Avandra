@@ -62,6 +62,7 @@ const navSlice = createSlice({
             }
         },  
         setMainView: (state) => {
+            state.screensPtr = 0;
             state.screensLength = 1;
         },
         /**
@@ -72,6 +73,7 @@ const navSlice = createSlice({
          */
         injectScreens(state, payload) {
             const screensLength: number = payload.payload;
+            // The main view is at 0, and so the first view in the stack is 1:
             state.screensPtr = 1;
             state.screensLength = screensLength;
 
@@ -82,9 +84,10 @@ const navSlice = createSlice({
          * @param state - The current state (NavState) of the Nav.
          * @returns - The updated state (NavState).
          */
-        ejectScreens(state) {            
+        ejectScreens(state) {  
+            // Reset back to the main view:          
             state.screensPtr = 0;
-            state.screensLength = 0;
+            state.screensLength = 1;
 
             return state;
         },
@@ -116,7 +119,7 @@ const navSlice = createSlice({
         goBack(state) {
             let screensPtr = state.screensPtr; 
 
-            if (screensPtr > 0) {
+            if (screensPtr > 1) {
                 state.screensPtr = screensPtr - 1;                    
             } else {
                 // When we reach the beginning of the stack, we wrap around

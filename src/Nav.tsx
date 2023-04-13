@@ -1,13 +1,9 @@
-import React, { ReactNode, Children, createContext, useContext } from 'react';
+import React, { ReactNode, Children, useContext } from 'react';
 import {Button, View} from 'react-native';
-import { toggleNav, useAppDispatch, useAppSelector, NavScreenState, injectScreens, setMainView, NavContext } from "./NavState";
+import { toggleNav, useAppDispatch, useAppSelector, NavScreenState, injectScreens, setMainView, NavContext, openNav } from "./NavState";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 import navStore, { RootState } from './NavStore';
 import { Provider } from 'react-redux';
-
-interface NavViewProps {
-  children: ReactNode
-}
 
 const NavView = () => {
   // Setup the Nav's toggle button's callback:
@@ -63,12 +59,14 @@ export interface NavProps {
 }
 
 export const NavStackComp = ({children}:NavProps) => {
+  const dispatch = useAppDispatch();    
+  const openTheNav = () => dispatch(openNav());
+  const injectTheScreens = (screensLength: number) => dispatch(injectScreens(screensLength));
+
   /*
    * 1. Extract the screen data from each of the children.
-   * 2. Push the screens into the store.
-   * 3. Open the top-most screen in the Nav.
    */  
-  const screens = Children.toArray(children).reduce<NavScreenState[]>((acc, child) => {
+  const screens = Children.toArray(children).reduce<NavScreenState[]>((acc, child) => {    
     if (React.isValidElement(child)) {
       if (child.type == 'NavScreen') {        
         // At this point we know child.props is a NavScreenState.
@@ -82,17 +80,19 @@ export const NavStackComp = ({children}:NavProps) => {
     } else {
       throw new Error ('A NavScreen is the only component allowable in the Nav.')
     }    
-  }, [])  
+  }, []);  
 
-  // Inject the screens into the Nav:
-  const dispatch = useAppDispatch();  
-  dispatch(injectScreens(screens.length));
+  // 2. Inject the screens into the Nav:
+  injectTheScreens(screens.length);
+  // 3. Make sure the Nav is open:
+  openTheNav();
 
+  // 4. Render the top-most view in screens:
   return (
     <NavContext.Provider value={{screens: screens}}>
       <NavView />
     </NavContext.Provider>          
-  )
+  );
 }
 
 export default ({children}:NavProps) => {
