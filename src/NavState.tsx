@@ -21,12 +21,28 @@ export interface NavScreenState {
     view: ReactNode
 }
 
-interface NavContext {
-    screens: NavScreenState[]
+export enum NavGroupType {
+    MainScreen = 'MainScreen',
+    NavStack = 'NavStack',
+    NavModals = 'NavModals'
+}
+
+export interface NavGroupState {
+    type: NavGroupType,
+    id: string,
+    group: NavScreenState[]
+}
+
+export interface NavContext {
+    mainScreen: NavScreenState,
+    stacks: NavGroupState[],
+    modals: NavGroupState
 }
 
 export const initialNavContext: NavContext = {
-    screens: []
+    mainScreen: {id: NavGroupType.MainScreen, view: null},
+    stacks: [],
+    modals: {type: NavGroupType.NavModals, id: '', group: []}
 }
 
 // Setup the screens context with just `children` in it.
