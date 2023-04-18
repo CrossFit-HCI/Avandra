@@ -91,7 +91,7 @@ const extractScreens = (acc:NavContext[], child: ReactNode) => {
   }    
 }
 
-export const NavStackComp = ({children}:NavProps) => {
+export const NavScreens = ({children}:NavProps) => {
   const dispatch = useAppDispatch();    
   const openTheNav = () => dispatch(openNav());
   const injectTheScreens = (screensLength: number) => dispatch(injectScreens(screensLength));
