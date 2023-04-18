@@ -12,11 +12,12 @@ const NavView = () => {
   const toggleNavStatus = () => dispatch(toggleNav())
 
   // Setup the current screen of the Nav:
-  const screens = useContext(NavContext).screens;
+  const screens = useContext(NavContext);
   const screenPtr: number = useAppSelector((state:RootState) => {
     return state.nav.screensPtr;
   });
-  const currentScreen = screens[screenPtr].view;  
+  // XXX: Need to update this:
+  const currentScreen = screens.mainScreen.view;
 
   // Used to hide and show part of the Nav; this mimics the Nav being open or
   // closed.
@@ -58,7 +59,7 @@ export interface NavProps {
   children: ReactNode;
 }
 
-const extractScreens = (acc:NavContext[], child: ReactNode) => {    
+const extractScreens = (acc:NavContext, child: ReactNode) => {    
   if (React.isValidElement(child)) {
     // 1. Make sure that we are in a NavScreen component:
     if (child.type == 'NavScreen') {        
@@ -97,32 +98,19 @@ export const NavScreens = ({children}:NavProps) => {
   const injectTheScreens = (screensLength: number) => dispatch(injectScreens(screensLength));
 
   // 1. Extract the screen data from each of the children.  
-  const screens = Children.toArray(children).reduce<NavScreenState[]>(extractScreens, []);  
+  const screens: NavContext = Children.toArray(children).reduce<NavContext>(extractScreens, initialNavContext);  
 
   // 2. Inject the screens into the Nav:
-  injectTheScreens(screens.length);
+  //injectTheScreens(screens.length);
   // 3. Make sure the Nav is open:
   openTheNav();
 
   // 4. Render the top-most view in screens:
   return (
-    <NavContext.Provider value={{screens: screens}}>
+    <NavContext.Provider value={screens}>
       <NavView />
     </NavContext.Provider>          
   );
 }
 
-export default ({children}:NavProps) => {
-  const dispatch = useAppDispatch();  
-  
-  let mainScreen = {screens: [{id: 'main', view: children}]};
-
-  // Setup the state.
-  dispatch(setMainView());
-
-  return (
-    <NavContext.Provider value={mainScreen}>
-      <NavView />
-    </NavContext.Provider>
-  )
-}
+export default NavScreens;
