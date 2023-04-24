@@ -110,8 +110,8 @@ const findModal = (id: string) => {
 }
 
 /** 
- * Sets up the screens context with just `children` in it. */
-const NavContext = createContext(initialNavContext);
+ * Sets up the context. */
+export const NavContext = createContext(initialNavContext);
 
 const extractGroup = (children: ReactNode) => {
     return Children.toArray(children).reduce<NavScreenProps[]>((acc, child) => {
@@ -187,7 +187,8 @@ const extractScreens = (acc:NavContext, child: ReactNode) => {
  * @param children The children from `NavProps` to extract the screens from.
  * @returns A `NavContext`
  */
-export const getScreens = (children: ReactNode) => {
+export const createNavContext = (children: ReactNode) => {
+    // TODO: Change this to just setup the context with this new context:
     return Children.toArray(children).reduce<NavContext>(extractScreens, initialNavContext);
 }
 
@@ -384,7 +385,9 @@ export const openTheNav = (): void => {
     navOpen();
 }
 
-/** Components for utilizing the store and context. */
+/****************************************************
+ *  Components for utilizing the store and context. *
+ ****************************************************/
 
 export interface NavProviderProps {
     children: ReactNode;
@@ -396,9 +399,7 @@ export interface NavProviderProps {
 export default ({children} : NavProviderProps) => {
     return (
         <Provider store={store}>
-            <NavContext.Provider value={initialNavContext}>
-                {children}
-            </NavContext.Provider>
+            {children}            
         </Provider>
     )
 }
