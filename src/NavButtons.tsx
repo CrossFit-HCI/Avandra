@@ -1,5 +1,5 @@
 import React from "react";
-import { closeNav, useAppDispatch } from "./NavState";
+import { closeNav, useAppDispatch } from "./NavViewModel";
 import { Button, GestureResponderEvent } from "react-native";
 
 /**
