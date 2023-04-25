@@ -3,8 +3,7 @@ import {Button, Text, View} from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Nav, { NavCommContainer, NavScreen } from "./Nav";
-import { NaviButton } from './NavButtons';
+import Nav, { NavProvider, NavScreen, NaviButton } from "./Nav";
 
 type AVRootStackParams = {
   Forecast: undefined;
@@ -70,14 +69,14 @@ const AVScreenStack = createNativeStackNavigator<AVRootStackParams>();
 
 const MainLoop = () => {    
   return (
-    <NavCommContainer>
+    <NavProvider>
       <NavigationContainer>
         <AVScreenStack.Navigator screenOptions={{headerShown: false }}>
             <AVScreenStack.Screen name="Forecast" component={Forecast} />          
             <AVScreenStack.Screen name="JournalList" component={JournalList}/>
         </AVScreenStack.Navigator>
       </NavigationContainer>
-    </NavCommContainer>
+    </NavProvider>
   )
 };
 

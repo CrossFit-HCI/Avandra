@@ -1,7 +1,9 @@
 import React, { ReactNode } from 'react';
 import { Button, View } from 'react-native';
-import { NavContext, NavScreenProps, getNavScreen, createNavContext, isNavOpened, openTheNav, toggleNavStatus } from "./NavViewModel";
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, isNavOpened, openTheNav, toggleNavStatus, NaviButton } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
+
+
 
 const NavView = () => {  
   const currentScreen = getNavScreen();
@@ -44,4 +46,7 @@ export const Nav = ({children}:NavScreensProps) => {
   );
 }
 
+/* We don't want library users to have access to the view model. So we export 
+ * the provider here. */
+export { NavProvider, NaviButton };
 export default Nav;
