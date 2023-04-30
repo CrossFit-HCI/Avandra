@@ -1,10 +1,9 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { Children, ReactNode, createContext, useContext } from "react";
+import React, { Children, ReactNode, createContext, useContext } from "react";
+import { Button, GestureResponderEvent } from "react-native";
 
-import { Maybe, just, nothing } from "./Maybe";
-import React from "react";
-import { Button, GestureResponderEvent } from "react-native/types";
+import { just, nothing } from "./Maybe";
 
 interface NavOpened {
     status: 'opened';
@@ -134,48 +133,48 @@ const extractGroup = (children: ReactNode) => {
 const extractScreens = (acc:NavContext, child: ReactNode) => {    
     if (React.isValidElement(child)) {
         // 1. Make sure that we are in a NavScreen component:
-        if (child.type == 'NavScreens') {        
-        // 2: child should have it's own children:      
-        const screens = Children.toArray(child.props.children).reduce<NavContext>((acc, childScreen) => {
-            // 3. Pattern match over the possible screen groups:
-            switch (child.type) {
-            case NavGroupType.MainScreen:
-                // 3.a. Extract the main screen:
-                acc.mainScreen = child.props.screen;
-                return acc;
-                
-            case NavGroupType.NavStack:
-                // 3.b: Extract the stack screens:
-                const stackScreens = extractGroup(child.props.children);
-                const newStack: NavGroupState = {
-                    type: NavGroupType.NavStack, 
-                    id: child.props.id, 
-                    group: stackScreens
-                };
-                acc.stacks.push(newStack);
-                return acc;
+        if (child.type == 'NavScreen') {        
+            // 2: child should have it's own children:      
+            const screens = Children.toArray(child.props.children).reduce<NavContext>((acc, childScreen) => {
+                // 3. Pattern match over the possible screen groups:
+                switch (child.type) {
+                case NavGroupType.MainScreen:
+                    // 3.a. Extract the main screen:
+                    acc.mainScreen = child.props.screen;
+                    return acc;
+                    
+                case NavGroupType.NavStack:
+                    // 3.b: Extract the stack screens:
+                    const stackScreens = extractGroup(child.props.children);
+                    const newStack: NavGroupState = {
+                        type: NavGroupType.NavStack, 
+                        id: child.props.id, 
+                        group: stackScreens
+                    };
+                    acc.stacks.push(newStack);
+                    return acc;
 
-            case NavGroupType.NavModal:
-                // 3.c: Extract the modal screens:
-                const modalScreens = extractGroup(child.props.children);
-                const newModals: NavGroupState = {
-                    type: NavGroupType.NavModal, 
-                    id: child.props.id, 
-                    group: modalScreens
-                };
-                acc.modals = newModals;
-                return acc;
+                case NavGroupType.NavModal:
+                    // 3.c: Extract the modal screens:
+                    const modalScreens = extractGroup(child.props.children);
+                    const newModals: NavGroupState = {
+                        type: NavGroupType.NavModal, 
+                        id: child.props.id, 
+                        group: modalScreens
+                    };
+                    acc.modals = newModals;
+                    return acc;
 
-            default:
-                throw new Error (`A component in NavScreens has the wrong type: ${child.type}.\n 
-                NavScreens can only contain MainScreen, NavStack, or NavModals components as children.`)
-            }        
-        }, initialNavContext)      
+                default:
+                    throw new Error (`A component in NavScreens has the wrong type: ${child.type}.\n 
+                    NavScreens can only contain MainScreen, NavStack, or NavModals components as children.`)
+                }        
+            }, initialNavContext)      
 
-        return screens;
+            return screens;
         } else {
-        throw new Error (`A component in the Nav has the wrong type: ${child.type}.\n
-            Only NavScreen can be used in the Nav.`)
+            throw new Error (`A component in the Nav has the wrong type: ${child.type}.\n
+                Only NavScreen can be used in the Nav.`)
         }      
     } else {
         throw new Error ('A NavScreen is the only component allowable in the Nav.')

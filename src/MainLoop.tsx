@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import {Button, Text, View} from 'react-native';
+import { Text, View} from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -13,6 +13,16 @@ type AVRootStackParams = {
 type ForecastScreenProps = NativeStackScreenProps<AVRootStackParams, 'Forecast'>;
 
 const Forecast = ({ navigation }:ForecastScreenProps) => {
+  let navMainScreen = () => {
+    return (
+      <View>
+        <NaviButton
+          onPress={() => navigation.navigate('JournalList')}
+          title="Journals" />          
+      </View>
+    )
+  }
+
   return (
       <View
         style={{
@@ -30,9 +40,7 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
           }}>Forecast</Text>
 
         <Nav>
-          <NaviButton
-            onPress={() => navigation.navigate('JournalList')}
-            title="Journals" />
+          <NavScreen id='MainScreen' screen={navMainScreen()}/>
         </Nav>                
       </View>
   )
@@ -41,6 +49,18 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
 type JournalListScreenProps = NativeStackScreenProps<AVRootStackParams, 'JournalList'>;
 
 const JournalList = ({ navigation }:JournalListScreenProps) => {
+  let navMainScreen = () => {
+    return (
+      <View>
+        <Text>Journal List Nav</Text>
+
+        <NaviButton
+          onPress={() => navigation.navigate('Forecast')}
+          title="Forecast" />
+      </View>
+    )
+  }
+
   return (    
       <View
         style={{
@@ -51,11 +71,7 @@ const JournalList = ({ navigation }:JournalListScreenProps) => {
         <Text>Journal List</Text>
 
         <Nav>
-            <Text>Journal List Nav</Text>
-
-            <NaviButton
-              onPress={() => navigation.navigate('Forecast')}
-              title="Forecast" />
+          <NavScreen id='MainScreen' screen={navMainScreen()}/>
         </Nav>
       </View>
   )
