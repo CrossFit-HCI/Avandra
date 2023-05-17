@@ -195,6 +195,14 @@ interface NavState {
 
     /** Determines which screen should be shown in the Nav. */
     screenGroup: NavGroupType,
+    
+    /******
+     * Add bimaps between labels and indices. Then the parent screen will inject
+     * a modal or stack by looking up the index to the stack or modal, and
+     * updating the pointers below which will result in the Nav changing
+     * screens. 
+     */
+    
     /** If `screenGroup = NavStack`, then this contains the index to the stack
      * in the `stacks` array in the context. */
     stackPtr?: number,

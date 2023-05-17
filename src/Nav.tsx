@@ -8,18 +8,13 @@ const NavView = () => {
   const state = useAppSelector((state) => state);
   
   const isNavOpened = isNavOpenedSelector(state);
-  const currentScreen = getNavScreen(context, state);
-
-  // Used to hide and show part of the Nav; this mimics the Nav being open or
-  // closed.
-  let navHeight = '50%';
-  let navBottom = isNavOpened ? '0%' : '-42%';  
+  const currentScreen = getNavScreen(context, state);    
 
   const dispatch = useAppDispatch();
   const togNav = () => dispatch(toggleNav());  
 
   return (    
-      <View style={navContainerViewStyle(navHeight, navBottom).container}>          
+      <View style={navContainerViewStyle(isNavOpened).container}>          
         <View
           style={navContainerBarViewStyle.container}>                    
           <Button 
