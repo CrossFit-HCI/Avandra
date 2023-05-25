@@ -11,7 +11,7 @@ export type Maybe<T> = Just<T> | Nothing;
 
 export const nothing: Nothing = {type: "nothing"}
 
-export function just<T>(v: T) {
+export function just<T>(v: T): Just<T> {
     return {type: "just", value: v}
 }
 
