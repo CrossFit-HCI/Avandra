@@ -3,7 +3,8 @@ import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-
 import React, { Children, JSXElementConstructor, ReactElement, ReactNode, createContext, useContext } from "react";
 import { Button, GestureResponderEvent, View } from "react-native";
 
-import { just, nothing } from "./Maybe";
+import Maybe, { just, nothing } from "./Maybe";
+import Bimap from "./Bimap";
 
 interface NavOpened {
     status: 'opened';
@@ -196,13 +197,18 @@ interface NavState {
     /** Determines which screen should be shown in the Nav. */
     screenGroup: NavGroupType,
     
-    /******
-     * Add bimaps between labels and indices. Then the parent screen will inject
-     * a modal or stack by looking up the index to the stack or modal, and
-     * updating the pointers below which will result in the Nav changing
-     * screens. 
+    /**
+     * Bimap between stack screen id's and array indices into the Context of
+     * stack screens. 
      */
-    
+    stackScreenMap: Bimap<string,number>,
+
+    /**
+     * Bimap between modal screen id's and array indices into the Context of
+     * modal screens. 
+     */
+    modalScreenMap: Bimap<string,number>,
+
     /** If `screenGroup = NavStack`, then this contains the index to the stack
      * in the `stacks` array in the context. */
     stackPtr?: number,
@@ -221,7 +227,11 @@ const initialNavState: NavState = {
     /** The Nav always starts out closed. */
     navStatus: navClosed,
     /** The Nav always starts with the `MainScreen`. */
-    screenGroup: NavGroupType.MainScreen
+    screenGroup: NavGroupType.MainScreen,
+    /** The stack screen map starts out empty. */
+    stackScreenMap: new Bimap<string,number>(),
+    /** The modal screen map starts out empty. */
+    modalScreenMap: new Bimap<string,number>()
 }
 
 /**
@@ -255,17 +265,41 @@ const navSlice = createSlice({
             state.stackPtr = undefined;
             state.modalPtr = undefined; 
         },
-        injectStack: (state, payload) => {
-            let stackIndex: number = payload.payload;
+        /**
+         * Injects a stack into the Nav.
+         * @param payload The id of the stack.
+         */
+        injectStack: (state, {payload}) => {
+            let stackIndexM: Maybe<number> = state.stackScreenMap.getValue(payload);
 
-            state.screenGroup = NavGroupType.NavStack;
-            state.stackPtr = stackIndex;
+            switch(stackIndexM.type) {
+                case "just":
+                    state.screenGroup = NavGroupType.NavStack;
+                    state.stackPtr = stackIndexM.value;
+                case "nothing":
+                    return
+            }            
         },
-        injectModal: (state, payload) => {
-            let modalIndex: number = payload.payload;
+        /**
+         * Injects a modal into the Nav.
+         * @param payload The id of the modal.
+         */
+        injectModal: (state, {payload}) => {
+            let modalIndexM: Maybe<number> = state.modalScreenMap.getValue(payload);
 
-            state.screenGroup = NavGroupType.NavModal;
-            state.stackPtr = modalIndex;
+            switch(modalIndexM.type) {
+                case "just":
+                    state.screenGroup = NavGroupType.NavModal;
+                    state.stackPtr = modalIndexM.value;
+                case "nothing":
+                    return
+            }
+        },
+        addStackScreen: (state, {payload}) => {
+            state.stackScreenMap.set(payload.key,payload.value);
+        },
+        addModalScreen: (state, {payload}) => {
+            state.modalScreenMap.set(payload.key,payload.value);
         }
     },    
 });
