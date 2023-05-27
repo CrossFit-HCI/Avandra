@@ -28,7 +28,7 @@ export interface NavScreenProps {
 }
 
 /** The types of screens the Nav supports. */
-enum NavGroupType {
+export enum NavGroupType {
     /** The main screen of the Nav. */
     MainScreen = 'MainScreen',
     /** A stack of Nav screens. */
@@ -130,10 +130,13 @@ const extractGroup = (children: ReactNode) => {
     }, [])
 }
 
-const extractScreens = (acc:NavContext, child: ReactNode) => {    
+const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode) => {    
     if (React.isValidElement(child) && typeof child.type != 'string') {
         // We have to cast child.type, because NavScreen is a function component.   
-        let component:JSXElementConstructor<any> = child.type     
+        let component:JSXElementConstructor<any> = child.type
+        
+        // Set the main screen:
+        acc.mainScreen.screen = main;
 
         // 1. Make sure that we are in a NavScreen component:
         if (component.name == 'NavScreen') {                    
@@ -185,9 +188,9 @@ const extractScreens = (acc:NavContext, child: ReactNode) => {
  * @param children The children from `NavProps` to extract the screens from.
  * @returns A `NavContext`
  */
-export const createNavContext = (children: ReactNode) => {
+export const createNavContext = (main: ReactElement, children: ReactNode) => {
     // TODO: Change this to just setup the context with this new context:
-    return Children.toArray(children).reduce<NavContext>(extractScreens, initialNavContext);
+    return Children.toArray(children).reduce<NavContext>(extractScreens(main), initialNavContext);
 }
 
 interface NavState {
@@ -295,16 +298,32 @@ const navSlice = createSlice({
                     return
             }
         },
-        addStackScreen: (state, {payload}) => {
-            state.stackScreenMap.set(payload.key,payload.value);
+        /**
+         * Link the stack screens in the context with the state.
+         * @param payload An array of `NavGroupState`'s containing the stack screens.
+         */
+        linkStackScreens: (state, {payload}) => {
+            let stacks: NavGroupState[] = payload;
+
+            stacks.map((stack: NavGroupState, index: number) => {state.stackScreenMap.set(stack.id,index);});
+
+            return state;
         },
-        addModalScreen: (state, {payload}) => {
-            state.modalScreenMap.set(payload.key,payload.value);
+        /**
+         * Link the modal screens in the context with the state.
+         * @param payload A `NavGroupState` containing the modal screens.
+         */
+        linkModalScreens: (state, {payload}) => {
+            let modals: NavGroupState = payload;
+
+            modals.group.map((modal: NavScreenProps, index: number) => {state.modalScreenMap.set(modal.id, index)});
+
+            return state;
         }
     },    
 });
 
-export const { openNav, closeNav, toggleNav, injectMainView, injectStack, injectModal } = navSlice.actions;
+export const { openNav, closeNav, toggleNav, injectMainView, injectStack, injectModal, linkStackScreens, linkModalScreens } = navSlice.actions;
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 

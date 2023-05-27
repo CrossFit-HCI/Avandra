@@ -1,6 +1,6 @@
-import React, { ReactNode, createElement, useContext } from 'react';
+import React, { ReactElement, ReactNode, createElement, useContext } from 'react';
 import { Button, View } from 'react-native';
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, groupTypeSelector  } from "./NavViewModel";
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, groupTypeSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 
 const NavView = () => {  
@@ -29,19 +29,31 @@ export const NavScreen = ({id, screen}:NavScreenProps) => {
   return createElement('NavScreen', {id: id, screen: screen}, <View/>) 
 }
 
-export interface NavScreensProps {
+interface NavModalsProps {
   children: ReactNode;
 }
 
-export const Nav = ({children}:NavScreensProps) => {  
-  // 1. Extract the screen data from each of the children.  
-  const context: NavContext = createNavContext(children);
+export const NavModals = ({children}:NavModalsProps): JSX.Element => {
+  return createElement('NavModals', {children: children}, <View/>) 
+}
 
-  // 3. Make sure the Nav is open:
+export interface NavScreensProps {
+  children: ReactNode;
+  main: ReactElement;
+}
+
+export const Nav = ({children, main}:NavScreensProps) => {  
   const dispatch = useAppDispatch();
-  const navOpen = () => dispatch(openNav());
 
-  navOpen();
+  // 1. Extract the screen data from each of the children.  
+  // TODO: Add main to the parameters for createNavContext:
+  const context: NavContext = createNavContext(main, children);
+  // 2. Link the context with the state:
+  dispatch(linkStackScreens({payload: context.stacks}));
+  dispatch(linkModalScreens({payload: context.modals}));
+
+  // 3. Make sure the Nav is open:  
+  dispatch(openNav());
 
   // 4. Render the main screen:
   return (

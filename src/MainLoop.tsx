@@ -3,7 +3,9 @@ import { Text, View} from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Nav, { NavProvider, NavScreen, NaviButton } from "./Nav";
+import Nav, { NavModals, NavProvider, NavScreen, NaviButton } from "./Nav";
+import { NativeScreenNavigationContainer } from 'react-native-screens';
+import { NavGroupType } from './NavViewModel';
 
 type AVRootStackParams = {
   Forecast: undefined;
@@ -11,6 +13,18 @@ type AVRootStackParams = {
 }
 
 type ForecastScreenProps = NativeStackScreenProps<AVRootStackParams, 'Forecast'>;
+
+const ModalScreen = () => {
+  return (
+    <View>
+      <Text 
+          style={{
+            color: 'white',
+            fontSize: 20,
+          }}>I'm a modal.</Text>
+    </View>
+  )
+}
 
 const Forecast = ({ navigation }:ForecastScreenProps) => {
   let navMainScreen = () => {
@@ -39,8 +53,10 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
             fontSize: 20,
           }}>Forecast</Text>
 
-        <Nav>
-          <NavScreen id='MainScreen' screen={navMainScreen()}/>
+        <Nav main={navMainScreen()}>
+          <NavModals>
+            <NavScreen id='Modal1'  screen={ModalScreen()} />
+          </NavModals>
         </Nav>                
       </View>
   )
@@ -70,8 +86,7 @@ const JournalList = ({ navigation }:JournalListScreenProps) => {
       }}>
         <Text>Journal List</Text>
 
-        <Nav>
-          <NavScreen id='MainScreen' screen={navMainScreen()}/>
+        <Nav main={navMainScreen()}>          
         </Nav>
       </View>
   )
