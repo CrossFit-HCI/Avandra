@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode, createElement, useContext } from 'react';
 import { Button, View } from 'react-native';
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, groupTypeSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, currentScreenSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 
 const NavView = () => {  
@@ -25,8 +25,8 @@ const NavView = () => {
   )
 }
 
-export const NavScreen = ({id, screen}:NavScreenProps) => { 
-  return createElement('NavScreen', {id: id, screen: screen}, <View/>) 
+export const NavScreen = ({label, screen}:NavScreenProps) => { 
+  return createElement('NavScreen', {label: label, screen: screen}, <View/>) 
 }
 
 interface NavModalsProps {

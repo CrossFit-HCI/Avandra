@@ -1,7 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import React, { Children, JSXElementConstructor, ReactElement, ReactNode, createContext, useContext } from "react";
-import { Button, GestureResponderEvent, View } from "react-native";
+import React, { Children, JSXElementConstructor, ReactElement, ReactNode, createContext } from "react";
+import { Button, GestureResponderEvent } from "react-native";
 
 import Maybe, { just, nothing } from "./Maybe";
 import Bimap from "./Bimap";
@@ -19,94 +19,99 @@ type NavStatus = NavOpened | NavClosed;
 export const navOpened: NavStatus = {status: 'opened'}
 export const navClosed: NavStatus = {status: 'closed'}
 
-/** The state of a Nav screen. */
-export interface NavScreenProps {
-    /** Some identifier for the screen. */
-    id: string,
-    /** The screens view. */
+enum ScreenIdents {
+    MainScreen = "MainScreen",
+    ModalScreen = "ModalScreen",
+    StackScreen = "StackScreen"
+}
+
+interface MainScreen {
+    type: ScreenIdents.MainScreen
+}
+
+interface ContextIndex {
+    index: number,
+    type: "ContextIndex"
+}
+
+const mkContextIndex = (index: number): ContextIndex => {
+    return {index: index, type: "ContextIndex"};
+}
+
+interface ContextLabel {
+    label: string,
+    type: "ContextLabel"
+}
+
+const mkContextLabel = (label: string): ContextLabel => {
+    return {label: label, type: "ContextLabel"};
+}
+
+interface ModalScreen {
+    accessor: ContextIndex | ContextLabel,
+    type: ScreenIdents.ModalScreen
+}
+
+interface StackScreen {
+    accessor: ContextIndex | ContextLabel,
+    type: ScreenIdents.StackScreen
+}
+
+type Screens = MainScreen | ModalScreen | StackScreen;
+
+interface Screen {
+    label: string,
     screen: ReactElement
 }
 
-/** The types of screens the Nav supports. */
-export enum NavGroupType {
-    /** The main screen of the Nav. */
-    MainScreen = 'MainScreen',
-    /** A stack of Nav screens. */
-    NavStack = 'NavStack',
-    /** Modals that can be injected into the Nav. */
-    NavModal = 'NavModals'
-}
-
-/** A generic datatype for describing groups of Nav screens. */
-interface NavGroupState {
-    /** The type of screen being described. */
-    type: NavGroupType,
-    /** An identifier for the screen. */
-    id: string,
-    /** An array of screens for the group. */
-    group: NavScreenProps[]
+interface Stack {
+    label: string,
+    screens: Screen[]
 }
 
 /** The Nav's context. It contains the screens of the Nav. */
 export interface NavContext {
     /** The Nav's main screen. */
-    mainScreen: NavScreenProps,
+    mainScreen: ReactElement,
     /** The stacks that can be injected into the Nav. */
-    stacks: NavGroupState[],
+    stacks: Stack[]
     /** The modals that can be injected into the Nav. */
-    modals: NavGroupState
+    modals: Screen[]
 }
 
 const initialNavContext: NavContext = {
-    mainScreen: {id: NavGroupType.MainScreen, screen: React.createElement("NavScreen")},
+    mainScreen: React.createElement("NavScreen"),
     stacks: [],
-    modals: {type: NavGroupType.NavModal, id: '', group: []}
-}
-
-/**
- * Finds the index of the corresponding screen group with identifier `id`.
- * 
- * @param id The identifier of the group.
- * @returns The `index` for the corresponding group, or nothing.
- */
-const findIndexInGroup = (context: NavContext, group: NavGroupType, id: string) => {
-    let index = -1;
-    
-    switch (group) {
-        case NavGroupType.MainScreen:
-            return nothing;
-        case NavGroupType.NavStack:
-            context.stacks.findIndex((value) => {
-                return value.id == id;
-            });
-        case NavGroupType.NavStack:
-            context.modals.group.findIndex((value) => {
-                return value.id == id;
-            });
-
-    }            
-
-    return ((index >= 0) ? just(index) : nothing);
+    modals: []
 }
 
 /**
  * Finds the index of the corresponding stack group with identifier `id`.
  * 
- * @param id The identifier of the stack.
+ * @param label The identifier of the stack.
  * @returns The `index` for the corresponding stack, or nothing.
  */
-const findStack = (context: NavContext, id: string) => {
-    return findIndexInGroup(context, NavGroupType.NavStack, id);
+const findStack = (context: NavContext, label: string) => {
+    return context.stacks.findIndex((value) => {
+        return value.label == label
+    });
 }
 
 /**
  * Finds the index of the corresponding modal with identifier `id`.
  * 
- * @param id The identifier of the modal.
+ * @param label The identifier of the modal.
  * @returns The `index` for the corresponding modal, or nothing.
  */
-const findModal = (context: NavContext, id: string) => {
-    return findIndexInGroup(context, NavGroupType.NavModal, id);
+const findModal = (context: NavContext, label: string) => {
+    return context.modals.findIndex((value) => {
+        return value.label == label
+    });
+}
+
+export interface NavScreenProps {    
+    label: string,
+    screen: Screen
 }
 
 /** 
@@ -114,11 +119,11 @@ const findModal = (context: NavContext, id: string) => {
 export const NavContext = createContext(initialNavContext);
 
 const extractGroup = (children: ReactNode) => {
-    return Children.toArray(children).reduce<NavScreenProps[]>((acc, child) => {
+    return Children.toArray(children).reduce<Screen[]>((acc, child) => {
       if (React.isValidElement(child)) {
         // Make sure we only have NavScreen's in the group:
         if (child.type == 'NavScreen') {
-          // Now the child.props should be a NavScreenState:
+          // Now the child.props should be a NavScreenProps:
           acc.push(child.props);
           return acc;
         } else {
@@ -133,52 +138,29 @@ const extractGroup = (children: ReactNode) => {
 const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode) => {    
     if (React.isValidElement(child) && typeof child.type != 'string') {
         // We have to cast child.type, because NavScreen is a function component.   
-        let component:JSXElementConstructor<any> = child.type
+        let component: JSXElementConstructor<any> = child.type
         
         // Set the main screen:
-        acc.mainScreen.screen = main;
+        acc.mainScreen = main;
 
-        // 1. Make sure that we are in a NavScreen component:
-        if (component.name == 'NavScreen') {                    
-            // 2. Pattern match over the possible screens:
-            switch (child.props.id) {
-            case NavGroupType.MainScreen:
-                // 3.a. Extract the main screen:
-                acc.mainScreen.screen = child.props.screen;
+        if (component.name == "NavModals") {
+            if (acc.modals.length == 0) {
+                acc.modals = extractGroup(child.props.children);
                 return acc;
-                
-            case NavGroupType.NavStack:
-                // 3.b: Extract the stack screens:
-                const stackScreens = extractGroup(child.props.children);
-                const newStack: NavGroupState = {
-                    type: NavGroupType.NavStack, 
-                    id: child.props.id, 
-                    group: stackScreens
-                };
-                acc.stacks.push(newStack);
-                return acc;
-
-            case NavGroupType.NavModal:
-                // 3.c: Extract the modal screens:
-                const modalScreens = extractGroup(child.props.children);
-                const newModals: NavGroupState = {
-                    type: NavGroupType.NavModal, 
-                    id: child.props.id, 
-                    group: modalScreens
-                };
-                acc.modals = newModals;
-                return acc;
-
-            default:
-                throw new Error (`A component in NavScreens has the wrong type: ${child.type}.\n 
-                NavScreens can only contain MainScreen, NavStack, or NavModals components as children.`)
-            }        
+            } else {
+                throw new Error ("There are more than one NavModals in the Nav.")
+            }
+        } else if (component.name == "NavStack") {
+            const stackScreens = extractGroup(child.props.children);
+            const label = child.props.label;
+            acc.stacks.push({label: label, screens: stackScreens});
+            return acc;
         } else {
-            throw new Error (`A component in the Nav has the wrong type: ${child.type}.\n
-                Only NavScreen can be used in the Nav.`)
-        }      
+            throw new Error (`A component in NavScreens has the wrong type: ${child.type}.\n 
+                NavScreens can only contain MainScreen, NavStack, or NavModals components as children.`)
+        }     
     } else {
-        throw new Error ('A NavScreen is the only component allowable in the Nav.')
+        throw new Error ('Invalid child found in the Nav.');
     }    
 }
 
@@ -189,7 +171,6 @@ const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode
  * @returns A `NavContext`
  */
 export const createNavContext = (main: ReactElement, children: ReactNode) => {
-    // TODO: Change this to just setup the context with this new context:
     return Children.toArray(children).reduce<NavContext>(extractScreens(main), initialNavContext);
 }
 
@@ -198,7 +179,7 @@ interface NavState {
     navStatus: NavStatus,    
 
     /** Determines which screen should be shown in the Nav. */
-    screenGroup: NavGroupType,
+    currentScreen: Screens,
     
     /**
      * Bimap between stack screen id's and array indices into the Context of
@@ -210,14 +191,7 @@ interface NavState {
      * Bimap between modal screen id's and array indices into the Context of
      * modal screens. 
      */
-    modalScreenMap: Bimap<string,number>,
-
-    /** If `screenGroup = NavStack`, then this contains the index to the stack
-     * in the `stacks` array in the context. */
-    stackPtr?: number,
-    /** If `screenGroup = NavModal`, then this contains the index to the modal
-     * in the `modals` array in the context. */
-    modalPtr?: number    
+    modalScreenMap: Bimap<string,number>,  
 }
 
 /** The initial state of the Nav. 
@@ -230,7 +204,7 @@ const initialNavState: NavState = {
     /** The Nav always starts out closed. */
     navStatus: navClosed,
     /** The Nav always starts with the `MainScreen`. */
-    screenGroup: NavGroupType.MainScreen,
+    currentScreen: {type: ScreenIdents.MainScreen},
     /** The stack screen map starts out empty. */
     stackScreenMap: new Bimap<string,number>(),
     /** The modal screen map starts out empty. */
@@ -264,9 +238,7 @@ const navSlice = createSlice({
             }
         },  
         injectMainView: (state) => {
-            state.screenGroup = NavGroupType.MainScreen;
-            state.stackPtr = undefined;
-            state.modalPtr = undefined; 
+            state.currentScreen = {type: ScreenIdents.MainScreen}
         },
         /**
          * Injects a stack into the Nav.
@@ -277,8 +249,7 @@ const navSlice = createSlice({
 
             switch(stackIndexM.type) {
                 case "just":
-                    state.screenGroup = NavGroupType.NavStack;
-                    state.stackPtr = stackIndexM.value;
+                    state.currentScreen = {type: ScreenIdents.StackScreen, accessor: mkContextIndex(stackIndexM.value)};
                 case "nothing":
                     return
             }            
@@ -292,20 +263,21 @@ const navSlice = createSlice({
 
             switch(modalIndexM.type) {
                 case "just":
-                    state.screenGroup = NavGroupType.NavModal;
-                    state.stackPtr = modalIndexM.value;
+                    state.currentScreen = {type: ScreenIdents.ModalScreen, accessor: mkContextIndex(modalIndexM.value)};
                 case "nothing":
                     return
             }
         },
         /**
          * Link the stack screens in the context with the state.
-         * @param payload An array of `NavGroupState`'s containing the stack screens.
+         * @param payload An array of `Screens`'s containing the stack of screens.
          */
         linkStackScreens: (state, {payload}) => {
-            let stacks: NavGroupState[] = payload;
+            let stacks: Stack[] = payload;
 
-            stacks.map((stack: NavGroupState, index: number) => {state.stackScreenMap.set(stack.id,index);});
+            stacks.map((stack: Stack, index: number) => {
+                state.stackScreenMap.set(stack.label,index);
+            });
 
             return state;
         },
@@ -314,9 +286,11 @@ const navSlice = createSlice({
          * @param payload A `NavGroupState` containing the modal screens.
          */
         linkModalScreens: (state, {payload}) => {
-            let modals: NavGroupState = payload;
+            let modals: Screen[] = payload;
 
-            modals.group.map((modal: NavScreenProps, index: number) => {state.modalScreenMap.set(modal.id, index)});
+            modals.map((modal: Screen, index: number) => {
+                state.modalScreenMap.set(modal.label, index)
+            });
 
             return state;
         }
@@ -340,105 +314,87 @@ type AppDispatch = typeof store.dispatch;
  *   Hooks for mutating the state.   *
  *************************************/ 
 
-interface ScreenFound {
-    type: NavGroupType,
-    index: number
-}
+// export const setNavScreen = (context:NavContext, type: NavGroupType, id?: string): number => {
+//     // const dispatch = useAppDispatch();    
+//     // const setMainView = () => dispatch(injectMainView());
+//     // const setStackView = (index: number) => dispatch(injectStack({payload: index}));
+//     // const setModalView = (index: number) => dispatch(injectModal({payload: index}));
 
-export const setNavScreen = (context:NavContext, type: NavGroupType, id?: string): number => {
-    // const dispatch = useAppDispatch();    
-    // const setMainView = () => dispatch(injectMainView());
-    // const setStackView = (index: number) => dispatch(injectStack({payload: index}));
-    // const setModalView = (index: number) => dispatch(injectModal({payload: index}));
+//     switch (type)  {   
+//         case NavGroupType.MainScreen:
+//             return 0;
 
-    switch (type)  {   
-        case NavGroupType.MainScreen:
-            return 0;
+//         case NavGroupType.NavModal:
+//             // We should have an id, so use it to get the index of the modal:
+//             if (id) {
+//                 // Look up the index for the corresponding screen with identifier id:
+//                 let indexMaybe = findModal(context, id);
+//                 let index = 0;
 
-        case NavGroupType.NavModal:
-            // We should have an id, so use it to get the index of the modal:
-            if (id) {
-                // Look up the index for the corresponding screen with identifier id:
-                let indexMaybe = findModal(context, id);
-                let index = 0;
+//                 // Make sure we found it:
+//                 switch (indexMaybe.type) {
+//                     case "nothing":
+//                         throw new Error (`getNavScreen: id = ${id}, but it was not found by findModal.`)        
+//                     case "just":
+//                         index = indexMaybe.value;
+//                 }
+//                 // Set the state to the corresponding modal:
+//                 return index;
+//             } else {
+//                 throw new Error ('getNavScreen: id is undefined, but type was set to NavGroupType.NavModal.')
+//             }
+//         case NavGroupType.NavStack:
+//             // We should have an id, so use it to get the index of the modal:
+//             if (id) {
+//                 // Look up the index for the corresponding screen with identifier id:
+//                 let indexMaybe = findStack(context, id);
+//                 let index = 0;
 
-                // Make sure we found it:
-                switch (indexMaybe.type) {
-                    case "nothing":
-                        throw new Error (`getNavScreen: id = ${id}, but it was not found by findModal.`)        
-                    case "just":
-                        index = indexMaybe.value;
-                }
-                // Set the state to the corresponding modal:
-                return index;
-            } else {
-                throw new Error ('getNavScreen: id is undefined, but type was set to NavGroupType.NavModal.')
-            }
-        case NavGroupType.NavStack:
-            // We should have an id, so use it to get the index of the modal:
-            if (id) {
-                // Look up the index for the corresponding screen with identifier id:
-                let indexMaybe = findStack(context, id);
-                let index = 0;
+//                 // Make sure we found it:
+//                 switch (indexMaybe.type) {
+//                     case "nothing":
+//                         throw new Error (`getNavScreen: id = ${id}, but it was not found by findStack.`)        
+//                     case "just":
+//                         index = indexMaybe.value;
+//                 }
+//                 // Set the state to the corresponding stack:
+//                 return index;
+//             } else {
+//                 throw new Error ('getNavScreen: id is undefined, but type was set to NavGroupType.NavStack.')
+//             }
+//     }
+// }
 
-                // Make sure we found it:
-                switch (indexMaybe.type) {
-                    case "nothing":
-                        throw new Error (`getNavScreen: id = ${id}, but it was not found by findStack.`)        
-                    case "just":
-                        index = indexMaybe.value;
-                }
-                // Set the state to the corresponding stack:
-                return index;
-            } else {
-                throw new Error ('getNavScreen: id is undefined, but type was set to NavGroupType.NavStack.')
-            }
-    }
-}
-
-export const groupTypeSelector = (state:RootState) => {
-    return state.nav.screenGroup 
-}
-
-export const modalPtrSelector = (state:RootState) => {
-    return state.nav.modalPtr
-}
-
-export const stackPtrSelector = (state:RootState) => {
-    return state.nav.modalPtr
+export const currentScreenSelector = (state:RootState) => {
+    return state.nav.currentScreen
 }
 
 export const getNavScreen = (context: NavContext, state: RootState): ReactNode => {            
-    const groupType = groupTypeSelector(state);  
-    
-    switch (groupType) {
-        case NavGroupType.MainScreen: {
-            return context.mainScreen.screen;        
+    const currentScreen: Screens = currentScreenSelector(state);  
+
+    switch (currentScreen.type) {
+        case (ScreenIdents.MainScreen): {
+            return context.mainScreen;
         }
-
-        case NavGroupType.NavModal: {
-            let indexMaybe: number | undefined = modalPtrSelector(state);
-
-            if (indexMaybe) {
-                let index: number = indexMaybe;
-                return context.modals.group[index].screen;
-            } else {
-                throw new Error (`getNavScreen: groupType = ${groupType} and modalPtr in the state is undefined.`)
+        case (ScreenIdents.ModalScreen): {
+            let accessor = currentScreen.accessor;
+            switch (accessor.type) {
+                case ("ContextIndex"): {
+                    return context.modals[accessor.index].screen;
+                }
+                case ("ContextLabel"):  {
+                    let mIndex = state.nav.modalScreenMap.getValue(accessor.label);
+                    switch (mIndex.type) {
+                        case ("just"):  
+                            return context.modals[mIndex.value].screen;
+                        case ("nothing"):
+                            throw new Error (`getNavScreen: Failed to find the modal with label ${accessor.label}`);
+                    }
+                }
             }
         }
-        case NavGroupType.NavStack: {
-            let indexMaybe: number | undefined = stackPtrSelector(state);
-
-            if (indexMaybe) {
-                let index: number = indexMaybe;
-                /* Return the first screen in the stack:                
-                 * 
-                 * TODO: Change this so we can move between screens of the stack:
-                 */
-                return context.stacks[index].group[0].screen;
-            } else {
-                throw new Error (`getNavScreen: groupType = ${groupType} and stackPtr in the state is undefined.`)
-            }
+        case (ScreenIdents.StackScreen): {
+            throw new Error ('getNavScreen: TODO StackScreens NOT IMPLEMENTED YET! ')
         }
     }
 }

@@ -55,7 +55,7 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
 
         <Nav main={navMainScreen()}>
           <NavModals>
-            <NavScreen id='Modal1'  screen={ModalScreen()} />
+            <NavScreen label='Modal1'  screen={ModalScreen()} />
           </NavModals>
         </Nav>                
       </View>
