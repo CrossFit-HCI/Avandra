@@ -1,14 +1,13 @@
-import React, { ReactElement, ReactNode, createElement, useContext } from 'react';
+import React, { ReactElement, ReactNode, createElement, useContext, useEffect } from 'react';
 import { Button, View } from 'react-native';
 import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, currentScreenSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 
 const NavView = () => {  
   const context = useContext(NavContext);
-  const state = useAppSelector((state) => state);
   
-  const isNavOpened = isNavOpenedSelector(state);
-  const currentScreen = getNavScreen(context, state);    
+  const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));
+  const currentScreen = useAppSelector((state) => getNavScreen(context, state));    
 
   const dispatch = useAppDispatch();
   const togNav = () => dispatch(toggleNav());  
@@ -46,16 +45,19 @@ export const Nav = ({children, main}:NavScreensProps) => {
   const dispatch = useAppDispatch();
 
   // 1. Extract the screen data from each of the children.  
-  // TODO: Add main to the parameters for createNavContext:
   const context: NavContext = createNavContext(main, children);
-  // 2. Link the context with the state:
-  dispatch(linkStackScreens({payload: context.stacks}));
-  dispatch(linkModalScreens({payload: context.modals}));
 
-  // 3. Make sure the Nav is open:  
-  dispatch(openNav());
+  useEffect(() => {   
+    // 2. Link the context with the state:
+    context.stacks.map((stack, index) => {
+      dispatch(linkStackScreens({key: stack.label, value: index}));                    
+    });
+    context.modals.map((modal, index) => {
+      dispatch(linkModalScreens({key: modal.label, value: index}));                    
+    })
+  });  
 
-  // 4. Render the main screen:
+  // 3. Render the main screen:
   return (
     <NavContext.Provider value={context}>
       <NavView />

@@ -4,8 +4,6 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer } from '@react-navigation/native';
 
 import Nav, { NavModals, NavProvider, NavScreen, NaviButton } from "./Nav";
-import { NativeScreenNavigationContainer } from 'react-native-screens';
-import { NavGroupType } from './NavViewModel';
 
 type AVRootStackParams = {
   Forecast: undefined;

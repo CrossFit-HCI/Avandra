@@ -4,7 +4,7 @@ import React, { Children, JSXElementConstructor, ReactElement, ReactNode, create
 import { Button, GestureResponderEvent } from "react-native";
 
 import Maybe, { just, nothing } from "./Maybe";
-import Bimap from "./Bimap";
+import { BinTree, empty, insert, lookup, mkKeyString } from "./Map";
 
 interface NavOpened {
     status: 'opened';
@@ -111,7 +111,7 @@ const findModal = (context: NavContext, label: string) => {
 
 export interface NavScreenProps {    
     label: string,
-    screen: Screen
+    screen: ReactElement
 }
 
 /** 
@@ -120,9 +120,11 @@ export const NavContext = createContext(initialNavContext);
 
 const extractGroup = (children: ReactNode) => {
     return Children.toArray(children).reduce<Screen[]>((acc, child) => {
-      if (React.isValidElement(child)) {
+      // We have to cast child.type, because NavScreen is a function component.         
+      if (React.isValidElement(child) && typeof child.type != 'string') {
+        let component: JSXElementConstructor<any> = child.type;
         // Make sure we only have NavScreen's in the group:
-        if (child.type == 'NavScreen') {
+        if (component.name == 'NavScreen') {
           // Now the child.props should be a NavScreenProps:
           acc.push(child.props);
           return acc;
@@ -185,13 +187,13 @@ interface NavState {
      * Bimap between stack screen id's and array indices into the Context of
      * stack screens. 
      */
-    stackScreenMap: Bimap<string,number>,
+    stackScreenMap: BinTree<string, number>,
 
     /**
      * Bimap between modal screen id's and array indices into the Context of
      * modal screens. 
      */
-    modalScreenMap: Bimap<string,number>,  
+    modalScreenMap: BinTree<string, number>,  
 }
 
 /** The initial state of the Nav. 
@@ -206,9 +208,9 @@ const initialNavState: NavState = {
     /** The Nav always starts with the `MainScreen`. */
     currentScreen: {type: ScreenIdents.MainScreen},
     /** The stack screen map starts out empty. */
-    stackScreenMap: new Bimap<string,number>(),
+    stackScreenMap: empty(),
     /** The modal screen map starts out empty. */
-    modalScreenMap: new Bimap<string,number>()
+    modalScreenMap: empty()
 }
 
 /**
@@ -245,7 +247,8 @@ const navSlice = createSlice({
          * @param payload The id of the stack.
          */
         injectStack: (state, {payload}) => {
-            let stackIndexM: Maybe<number> = state.stackScreenMap.getValue(payload);
+            let payloadString: string = payload;
+            let stackIndexM: Maybe<number> = lookup(mkKeyString(payloadString), state.stackScreenMap);
 
             switch(stackIndexM.type) {
                 case "just":
@@ -259,7 +262,8 @@ const navSlice = createSlice({
          * @param payload The id of the modal.
          */
         injectModal: (state, {payload}) => {
-            let modalIndexM: Maybe<number> = state.modalScreenMap.getValue(payload);
+            let payloadString: string = payload;
+            let modalIndexM: Maybe<number> = lookup(mkKeyString(payloadString), state.stackScreenMap);
 
             switch(modalIndexM.type) {
                 case "just":
@@ -272,12 +276,11 @@ const navSlice = createSlice({
          * Link the stack screens in the context with the state.
          * @param payload An array of `Screens`'s containing the stack of screens.
          */
-        linkStackScreens: (state, {payload}) => {
-            let stacks: Stack[] = payload;
+        linkStackScreens: (state, action) => {
+            let key: string = action.payload.key;
+            let value: number = action.payload.value;
 
-            stacks.map((stack: Stack, index: number) => {
-                state.stackScreenMap.set(stack.label,index);
-            });
+            state.stackScreenMap = insert(mkKeyString(key), value, state.stackScreenMap);
 
             return state;
         },
@@ -285,12 +288,11 @@ const navSlice = createSlice({
          * Link the modal screens in the context with the state.
          * @param payload A `NavGroupState` containing the modal screens.
          */
-        linkModalScreens: (state, {payload}) => {
-            let modals: Screen[] = payload;
+        linkModalScreens: (state, action) => {
+            let key: string = action.payload.key;
+            let value: number = action.payload.value;
 
-            modals.map((modal: Screen, index: number) => {
-                state.modalScreenMap.set(modal.label, index)
-            });
+            state.modalScreenMap = insert(mkKeyString(key), value, state.modalScreenMap);
 
             return state;
         }
@@ -383,7 +385,7 @@ export const getNavScreen = (context: NavContext, state: RootState): ReactNode =
                     return context.modals[accessor.index].screen;
                 }
                 case ("ContextLabel"):  {
-                    let mIndex = state.nav.modalScreenMap.getValue(accessor.label);
+                    let mIndex = lookup(mkKeyString(accessor.label), state.nav.modalScreenMap);
                     switch (mIndex.type) {
                         case ("just"):  
                             return context.modals[mIndex.value].screen;
