@@ -4,6 +4,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer } from '@react-navigation/native';
 
 import Nav, { NavModals, NavProvider, NavScreen, NaviButton } from "./Nav";
+import { CloseModal, OpenModal } from './NavViewModel';
 
 type AVRootStackParams = {
   Forecast: undefined;
@@ -20,6 +21,8 @@ const ModalScreen = () => {
             color: 'white',
             fontSize: 20,
           }}>I'm a modal.</Text>
+
+          <CloseModal title='Close Modal1'/>
     </View>
   )
 }
@@ -30,7 +33,7 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
       <View>
         <NaviButton
           onPress={() => navigation.navigate('JournalList')}
-          title="Journals" />          
+          title="Journals" />         
       </View>
     )
   }
@@ -50,6 +53,10 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
             color: 'white',
             fontSize: 20,
           }}>Forecast</Text>
+
+        <OpenModal
+          label='Modal1'
+          title="Open Modal1" /> 
 
         <Nav main={navMainScreen()}>
           <NavModals>

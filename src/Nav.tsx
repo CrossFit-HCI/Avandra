@@ -1,11 +1,10 @@
-import React, { ReactElement, ReactNode, createElement, useContext, useEffect } from 'react';
+import React, { ReactElement, ReactNode, createElement, useState } from 'react';
 import { Button, View } from 'react-native';
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, openNav, toggleNav, useAppSelector, isNavOpenedSelector, currentScreenSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
+
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 
-const NavView = () => {  
-  const context = useContext(NavContext);
-  
+const NavView = ({context} : {context: NavContext}) => {  
   const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));
   const currentScreen = useAppSelector((state) => getNavScreen(context, state));    
 
@@ -45,24 +44,21 @@ export const Nav = ({children, main}:NavScreensProps) => {
   const dispatch = useAppDispatch();
 
   // 1. Extract the screen data from each of the children.  
-  const context: NavContext = createNavContext(main, children);
+  let newContext = createNavContext(main, children);
 
-  useEffect(() => {   
-    // 2. Link the context with the state:
-    context.stacks.map((stack, index) => {
-      dispatch(linkStackScreens({key: stack.label, value: index}));                    
-    });
-    context.modals.map((modal, index) => {
-      dispatch(linkModalScreens({key: modal.label, value: index}));                    
-    })
-  });  
+  // 2. Link the context with the state:
+  newContext.stacks.map((stack, index) => {
+    dispatch(linkStackScreens({key: stack.label, value: index}));                    
+  });
+
+  newContext.modals.map((modal, index) => {
+    dispatch(linkModalScreens({key: modal.label, value: index}));                    
+  });    
+  
+  const [context] = useState(newContext);
 
   // 3. Render the main screen:
-  return (
-    <NavContext.Provider value={context}>
-      <NavView />
-    </NavContext.Provider>            
-  );
+  return  <NavView context={context}/>;
 }
 
 /* We don't want library users to have access to the view model. So we export 

@@ -1,7 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import React, { Children, JSXElementConstructor, ReactElement, ReactNode, createContext } from "react";
-import { Button, GestureResponderEvent } from "react-native";
+import { Button, GestureResponderEvent, View } from "react-native";
 
 import Maybe, { just, nothing } from "./Maybe";
 import { BinTree, empty, insert, lookup, mkKeyString } from "./Map";
@@ -29,31 +29,23 @@ interface MainScreen {
     type: ScreenIdents.MainScreen
 }
 
-interface ContextIndex {
-    index: number,
-    type: "ContextIndex"
-}
-
-const mkContextIndex = (index: number): ContextIndex => {
-    return {index: index, type: "ContextIndex"};
-}
-
 interface ContextLabel {
+    index: number,
     label: string,
     type: "ContextLabel"
 }
 
-const mkContextLabel = (label: string): ContextLabel => {
-    return {label: label, type: "ContextLabel"};
+const mkContextLabel = (index: number, label: string): ContextLabel => {
+    return {index: index, label: label, type: "ContextLabel"};
 }
 
 interface ModalScreen {
-    accessor: ContextIndex | ContextLabel,
+    accessor: ContextLabel,
     type: ScreenIdents.ModalScreen
 }
 
 interface StackScreen {
-    accessor: ContextIndex | ContextLabel,
+    accessor: ContextLabel,
     type: ScreenIdents.StackScreen
 }
 
@@ -74,15 +66,9 @@ export interface NavContext {
     /** The Nav's main screen. */
     mainScreen: ReactElement,
     /** The stacks that can be injected into the Nav. */
-    stacks: Stack[]
+    stacks: Stack[],
     /** The modals that can be injected into the Nav. */
     modals: Screen[]
-}
-
-const initialNavContext: NavContext = {
-    mainScreen: React.createElement("NavScreen"),
-    stacks: [],
-    modals: []
 }
 
 /**
@@ -114,9 +100,11 @@ export interface NavScreenProps {
     screen: ReactElement
 }
 
-/** 
- * Sets up the context. */
-export const NavContext = createContext(initialNavContext);
+export const initialNavContext: NavContext = Object.freeze({
+    mainScreen: (<View></View>),
+    stacks: [],
+    modals: []
+});
 
 const extractGroup = (children: ReactNode) => {
     return Children.toArray(children).reduce<Screen[]>((acc, child) => {
@@ -137,26 +125,37 @@ const extractGroup = (children: ReactNode) => {
     }, [])
 }
 
-const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode) => {    
-    if (React.isValidElement(child) && typeof child.type != 'string') {
+const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode): NavContext => {           
+    if (React.isValidElement(child) && typeof child.type != 'string') {        
         // We have to cast child.type, because NavScreen is a function component.   
-        let component: JSXElementConstructor<any> = child.type
-        
-        // Set the main screen:
-        acc.mainScreen = main;
+        let component: JSXElementConstructor<any> = child.type               
 
+        // Set the main screen:        
         if (component.name == "NavModals") {
             if (acc.modals.length == 0) {
-                acc.modals = extractGroup(child.props.children);
-                return acc;
+                const modals = extractGroup(child.props.children);
+
+                return {
+                    mainScreen: main,
+                    stacks: acc.stacks,
+                    modals: modals
+                };
             } else {
                 throw new Error ("There are more than one NavModals in the Nav.")
             }
         } else if (component.name == "NavStack") {
             const stackScreens = extractGroup(child.props.children);
             const label = child.props.label;
-            acc.stacks.push({label: label, screens: stackScreens});
-            return acc;
+            const stack: Stack = {label: label, screens: stackScreens};
+            const stacks: Stack[] = acc.stacks;
+
+            stacks.push(stack);            
+
+            return {
+                mainScreen: main,
+                stacks: stacks,
+                modals: acc.modals
+            };
         } else {
             throw new Error (`A component in NavScreens has the wrong type: ${child.type}.\n 
                 NavScreens can only contain MainScreen, NavStack, or NavModals components as children.`)
@@ -172,8 +171,12 @@ const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode
  * @param children The children from `NavProps` to extract the screens from.
  * @returns A `NavContext`
  */
-export const createNavContext = (main: ReactElement, children: ReactNode) => {
-    return Children.toArray(children).reduce<NavContext>(extractScreens(main), initialNavContext);
+export const createNavContext = (main: ReactElement, children: ReactNode): NavContext => {
+    if (children === undefined) {
+        return {mainScreen: main, stacks: [], modals: []};
+    } else {
+        return Children.toArray(children).reduce<NavContext>(extractScreens(main), initialNavContext);
+    }
 }
 
 interface NavState {
@@ -182,6 +185,9 @@ interface NavState {
 
     /** Determines which screen should be shown in the Nav. */
     currentScreen: Screens,
+
+    /** The screen we left when showing a modal or a stack. */
+    previousScreen: Maybe<Screens>,
     
     /**
      * Bimap between stack screen id's and array indices into the Context of
@@ -207,6 +213,7 @@ const initialNavState: NavState = {
     navStatus: navClosed,
     /** The Nav always starts with the `MainScreen`. */
     currentScreen: {type: ScreenIdents.MainScreen},
+    previousScreen: nothing,    
     /** The stack screen map starts out empty. */
     stackScreenMap: empty(),
     /** The modal screen map starts out empty. */
@@ -252,22 +259,48 @@ const navSlice = createSlice({
 
             switch(stackIndexM.type) {
                 case "just":
-                    state.currentScreen = {type: ScreenIdents.StackScreen, accessor: mkContextIndex(stackIndexM.value)};
+                    state.currentScreen = {type: ScreenIdents.StackScreen, accessor: mkContextLabel(stackIndexM.value, payloadString)};
                 case "nothing":
                     return
             }            
         },
         /**
+         * Sets the current screen to be the previous screen before opening a
+         * modal or stack.
+         */
+        ejectModal: (state) => {
+            switch (state.previousScreen.type) {
+                case ("just"): 
+                    state.currentScreen = state.previousScreen.value;
+                    state.previousScreen = nothing;
+                case ("nothing"): 
+                    return;
+            }            
+        },
+        /**
          * Injects a modal into the Nav.
-         * @param payload The id of the modal.
+         * @param payload The label of the modal.
          */
         injectModal: (state, {payload}) => {
-            let payloadString: string = payload;
-            let modalIndexM: Maybe<number> = lookup(mkKeyString(payloadString), state.stackScreenMap);
+            let label: string = payload;
+            let modalIndexM: Maybe<number> = lookup(mkKeyString(label), state.modalScreenMap);
 
             switch(modalIndexM.type) {
                 case "just":
-                    state.currentScreen = {type: ScreenIdents.ModalScreen, accessor: mkContextIndex(modalIndexM.value)};
+                    switch (state.currentScreen.type) {                        
+                        case ScreenIdents.ModalScreen:
+                            if (state.currentScreen.accessor.label != label) {
+                                state.previousScreen = just(state.currentScreen);
+                                state.currentScreen = {type: ScreenIdents.ModalScreen, accessor: mkContextLabel(modalIndexM.value, label)};
+                            }
+
+                            return state;
+                        case ScreenIdents.MainScreen:
+                        case ScreenIdents.StackScreen:
+                            state.previousScreen = just(state.currentScreen);
+                            state.currentScreen = {type: ScreenIdents.ModalScreen, accessor: mkContextLabel(modalIndexM.value, label)};
+                            return state;
+                    }                            
                 case "nothing":
                     return
             }
@@ -299,7 +332,7 @@ const navSlice = createSlice({
     },    
 });
 
-export const { openNav, closeNav, toggleNav, injectMainView, injectStack, injectModal, linkStackScreens, linkModalScreens } = navSlice.actions;
+export const { openNav, closeNav, toggleNav, injectMainView, injectStack, injectModal, ejectModal, linkStackScreens, linkModalScreens } = navSlice.actions;
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
@@ -379,21 +412,8 @@ export const getNavScreen = (context: NavContext, state: RootState): ReactNode =
             return context.mainScreen;
         }
         case (ScreenIdents.ModalScreen): {
-            let accessor = currentScreen.accessor;
-            switch (accessor.type) {
-                case ("ContextIndex"): {
-                    return context.modals[accessor.index].screen;
-                }
-                case ("ContextLabel"):  {
-                    let mIndex = lookup(mkKeyString(accessor.label), state.nav.modalScreenMap);
-                    switch (mIndex.type) {
-                        case ("just"):  
-                            return context.modals[mIndex.value].screen;
-                        case ("nothing"):
-                            throw new Error (`getNavScreen: Failed to find the modal with label ${accessor.label}`);
-                    }
-                }
-            }
+            let accessor = currentScreen.accessor;            
+            return context.modals[accessor.index].screen;
         }
         case (ScreenIdents.StackScreen): {
             throw new Error ('getNavScreen: TODO StackScreens NOT IMPLEMENTED YET! ')
@@ -435,13 +455,35 @@ export const NaviButton = (props:NavButtonProps) => {
         <Button title={props.title} onPress={onPressCallback} />
     )
 }
-
-export const NextNavButton = () => {
-
+interface OpenModalProps {
+    title: string,
+    label: string
 }
 
-export const GoBackNavButton = () => {
+export const OpenModal = (props:OpenModalProps) => {
+    const dispatch = useAppDispatch();
 
+    const onPressCallback = (event: GestureResponderEvent) => {
+        // Switch the current Nav screen to the modal with label.
+        dispatch(injectModal(props.label));
+    };
+
+    return (
+        <Button title={props.title} onPress={onPressCallback} />
+    );
+}
+
+export const CloseModal = (props:{title: string}) => {
+    const dispatch = useAppDispatch();
+
+    const onPressCallback = (event: GestureResponderEvent) => {
+        // Switch the current Nav screen to the modal with label.
+        dispatch(ejectModal());
+    };
+
+    return (
+        <Button title={props.title} onPress={onPressCallback} />
+    );
 }
 
 export interface NavProviderProps {
