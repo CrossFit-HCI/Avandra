@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
 import { Button, View } from 'react-native';
 
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkStackScreens, linkModalScreens  } from "./NavViewModel";
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens  } from "./NavViewModel";
 import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
 
 const NavView = ({context} : {context: NavContext}) => {  
@@ -31,10 +31,6 @@ interface NavModalsProps {
   children: ReactNode;
 }
 
-export const NavModals = ({children}:NavModalsProps): JSX.Element => {
-  return createElement('NavModals', {children: children}, <View/>) 
-}
-
 export interface NavScreensProps {
   children: ReactNode;
   main: ReactElement;
@@ -46,13 +42,8 @@ export const Nav = ({children, main}:NavScreensProps) => {
   // 1. Extract the screen data from each of the children.  
   let newContext = createNavContext(main, children);
 
-  // 2. Link the context with the state:
-  newContext.stacks.map((stack, index) => {
-    dispatch(linkStackScreens({key: stack.label, value: index}));                    
-  });
-
-  newContext.modals.map((modal, index) => {
-    dispatch(linkModalScreens({key: modal.label, value: index}));                    
+  newContext.screens.stack.map((screen, index) => {
+    dispatch(linkScreens({key: screen.label, value: index}));                    
   });    
   
   const [context] = useState(newContext);

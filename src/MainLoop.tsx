@@ -3,8 +3,8 @@ import { Text, View} from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Nav, { NavModals, NavProvider, NavScreen, NaviButton } from "./Nav";
-import { CloseModal, OpenModal } from './NavViewModel';
+import Nav, { NavProvider, NavScreen, NaviButton } from "./Nav";
+import { CloseScreen, OpenScreen } from './NavViewModel';
 
 type AVRootStackParams = {
   Forecast: undefined;
@@ -22,7 +22,7 @@ const ModalScreen = () => {
             fontSize: 20,
           }}>I'm a modal.</Text>
 
-          <CloseModal title='Close Modal1'/>
+          <CloseScreen title='Close Modal1'/>
     </View>
   )
 }
@@ -54,14 +54,12 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
             fontSize: 20,
           }}>Forecast</Text>
 
-        <OpenModal
+        <OpenScreen
           label='Modal1'
           title="Open Modal1" /> 
 
         <Nav main={navMainScreen()}>
-          <NavModals>
             <NavScreen label='Modal1'  screen={ModalScreen()} />
-          </NavModals>
         </Nav>                
       </View>
   )
