@@ -72,39 +72,21 @@ export const initialNavContext: NavContext = Object.freeze({
     modals: []
 });
 
-const extractGroup = (children: ReactNode) => {
-    return Children.toArray(children).reduce<Screen[]>((acc, child) => {
-      // We have to cast child.type, because NavScreen is a function component.         
-      if (React.isValidElement(child) && typeof child.type != 'string') {
+const extractScreens = (acc:Screen[], child: ReactNode): Screen[] => {           
+    // We have to cast child.type, because NavScreen is a function component.         
+    if (React.isValidElement(child) && typeof child.type != 'string') {
         let component: JSXElementConstructor<any> = child.type;
         // Make sure we only have NavScreen's in the group:
         if (component.name == 'NavScreen') {
-          // Now the child.props should be a NavScreenProps:
-          acc.push(child.props);
-          return acc;
+            // Now the child.props should be a NavScreenProps:
+            acc.push(child.props);
+            return acc;
         } else {
-          throw new Error ('A NavScreen is the only component allowable in a Nav group.')  
+            throw new Error ('A NavScreen is the only component allowable in a Nav group.')  
         }      
-      } else {
-        throw new Error ('extractGroup: child is not a valid React element.')
-      }    
-    }, [])
-}
-
-const extractScreens = (main: ReactElement) => (acc:NavContext, child: ReactNode): NavContext => {           
-    if (React.isValidElement(child) && typeof child.type != 'string') {        
-        // We have to cast child.type, because NavScreen is a function component.   
-        let component: JSXElementConstructor<any> = child.type               
-
-        const screensArray = extractGroup(child.props.children);
-
-        return {
-            mainScreen: main,
-            screens: {stack: screensArray}
-        };
     } else {
-        throw new Error ("There are more than one NavModals in the Nav.")
-    }        
+        throw new Error ('extractGroup: child is not a valid React element.')
+    }          
 }
 
 /**
@@ -117,7 +99,12 @@ export const createNavContext = (main: ReactElement, children: ReactNode): NavCo
     if (children === undefined) {
         return {mainScreen: main, screens: {stack: []}};
     } else {
-        return Children.toArray(children).reduce<NavContext>(extractScreens(main), initialNavContext);
+        const screensArray: Screen[] = Children.toArray(children).reduce<Screen[]>(extractScreens, []);
+
+        return {
+            mainScreen: main,
+            screens: {stack: screensArray}
+        };
     }
 }
 
