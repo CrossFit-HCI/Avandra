@@ -90,7 +90,7 @@ const extractScreens = (acc:Screen[], child: ReactNode): Screen[] => {
 }
 
 /**
- * Get the screens from the children of a NavScreens component.
+ * Get the screens from the children of a Nav component.
  * 
  * @param children The children from `NavProps` to extract the screens from.
  * @returns A `NavContext`
