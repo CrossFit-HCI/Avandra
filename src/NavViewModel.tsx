@@ -134,7 +134,8 @@ interface NavState {
 const initialNavState: NavState = {
     /** The Nav always starts out closed. */
     navStatus: navClosed,
-    currentScreen: nothing,
+    /** Always start out at the main screen. */
+    currentScreen: just (mkContextLabel(mainScreenIndex, mainScreenLabel)),
     previousScreen: nothing,    
     screenMap: empty()
 }

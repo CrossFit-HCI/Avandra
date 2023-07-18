@@ -42,6 +42,7 @@ export const Nav = ({children, main}:NavScreensProps) => {
   // 1. Extract the screen data from each of the children.  
   let newContext = createNavContext(main, children);
 
+  // 2. Link the context with the Redux state.
   newContext.screens.stack.map((screen, index) => {
     dispatch(linkScreens({key: screen.label, value: index}));                    
   });    
