@@ -129,7 +129,7 @@ interface NavState {
  * 
  * Initially, the Nav starts:
  * - closed, and
- * - showing the `NavGroupType.MainScreen`.
+ * - showing the main screen.
 */
 const initialNavState: NavState = {
     /** The Nav always starts out closed. */
