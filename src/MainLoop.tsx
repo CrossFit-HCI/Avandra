@@ -3,8 +3,8 @@ import { Text, View} from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Nav, { NavProvider, NavScreen, NaviButton } from "./Nav";
-import { CloseScreen, OpenScreen } from './NavViewModel';
+import Nav, { NavProvider, NavScreen, NaviButton } from "./nav/view";
+import { CloseScreen, OpenScreen } from './nav/model';
 
 type AVRootStackParams = {
   Forecast: undefined;

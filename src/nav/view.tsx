@@ -1,8 +1,8 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
 import { Button, View } from 'react-native';
 
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens  } from "./NavViewModel";
-import { navContainerBarViewStyle, navContainerViewStyle } from './NavStyles';
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens  } from "../nav/model";
+import { navContainerBarViewStyle, navContainerViewStyle } from '../nav/styles';
 
 const NavView = ({context} : {context: NavContext}) => {  
   const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));

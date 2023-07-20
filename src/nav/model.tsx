@@ -1,10 +1,10 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import React, { Children, JSXElementConstructor, ReactElement, ReactNode, createContext } from "react";
+import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { Button, GestureResponderEvent, View } from "react-native";
 
-import Maybe, { just, nothing } from "./Maybe";
-import { BinTree, empty, insert, lookup, mkKeyString } from "./Map";
+import { Maybe, just, nothing } from "fp-lib";
+import { BinTree, empty, insert, lookup, mkKeyString } from "fp-lib";
 
 interface NavOpened {
     status: 'opened';
