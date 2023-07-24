@@ -1,4 +1,4 @@
-interface PrimaryFont {
+interface Heading1Font {
     color: string,
     family: string,
     size: number,
@@ -6,7 +6,7 @@ interface PrimaryFont {
     weight: string | number
 }
 
-interface SecondaryFont {
+interface Heading2Font {
     color: string,
     family: string,
     size: number,
@@ -14,7 +14,7 @@ interface SecondaryFont {
     weight: string | number
 }
 
-interface TertiaryFont {
+interface Heading3Font {
     color: string,
     family: string,
     size: number,
@@ -23,30 +23,30 @@ interface TertiaryFont {
 }
 
 interface FontTheme {
-    primaryFont: PrimaryFont,
-    secondaryFont: SecondaryFont,
-    tertiaryFont: TertiaryFont
+    heading1Font: Heading1Font,
+    heading2Font: Heading2Font,
+    heading3Font: Heading3Font
 }
 
 const fontFamily: string = "Arial";
 const fontColor: string = "black";
 
 const fontTheme: FontTheme = {
-    primaryFont: {
+    heading1Font: {
         family: fontFamily,
         color: fontColor,
         size: 0,
         style: "",
         weight: ""
     },
-    secondaryFont: {
+    heading2Font: {
         family: fontFamily,
         color: fontColor,
         size: 0,
         style: "",
         weight: ""
     },
-    tertiaryFont: {
+    heading3Font: {
         family: fontFamily,
         color: fontColor,
         size: 0,
