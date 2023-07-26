@@ -1121,6 +1121,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@heades/fp-lib@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/@heades/fp-lib/-/fp-lib-0.0.1.tgz"
+  integrity sha512-4ZEa5HRd/1jC8IiYT2XH4OUXP2r8o5RxosE/FYkP2CrSzjjZVFucZQzLpLNAlqg68M4zqH4r6Xmxpw28GFnNRQ==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.8.tgz"
@@ -3597,10 +3602,6 @@ for-each@^0.3.3:
   integrity sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==
   dependencies:
     is-callable "^1.1.3"
-
-"fp-lib@file:../fp-lib":
-  version "0.0.1"
-  resolved "file:../fp-lib"
 
 fp-ts@^2.16.0:
   version "2.16.0"

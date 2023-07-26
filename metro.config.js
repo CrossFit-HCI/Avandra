@@ -1,17 +1,13 @@
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-
-const packagePath =
-    '/Users/heades/development/fp-lib';
-
+const path = require('path');
 /**
  * Metro configuration
  * https://facebook.github.io/metro/docs/configuration
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {
-    resolver: {
-        nodeModulesPaths: [packagePath],
+const config = {    
+    resolver: {        
         unstable_enableSymlinks: true,
     },
 };

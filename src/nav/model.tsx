@@ -3,8 +3,8 @@ import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-
 import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { Button, GestureResponderEvent, View } from "react-native";
 
-import { Maybe, just, nothing } from "fp-lib";
-import { BinTree, empty, insert, lookup, mkKeyString } from "fp-lib";
+import { Maybe, just, nothing } from "@heades/fp-lib";
+import { BinTree, empty, insert, lookup, mkKeyString } from "@heades/fp-lib";
 
 interface NavOpened {
     status: 'opened';
