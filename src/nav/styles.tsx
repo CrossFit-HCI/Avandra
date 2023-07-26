@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { colorTheme } from "../theme/theme";
+import { colorTheme, borderTheme } from "../theme/theme";
 
 export const navContainerViewStyle = (isNavOpened: boolean) => {
     // Used to hide and show part of the Nav; this mimics the Nav being open or
@@ -17,6 +17,8 @@ export const navContainerViewStyle = (isNavOpened: boolean) => {
             backgroundColor: colorTheme.component.background,
             position: 'absolute',
             bottom: navBottom,
+            borderTopColor: borderTheme.component.borderColor,
+            borderTopWidth: borderTheme.component.borderWidth         
         }
     });
 }
