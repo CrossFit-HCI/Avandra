@@ -6,17 +6,14 @@ import Nav, { NavScreen, NaviButton } from "../nav/view";
 import { CloseScreen, OpenScreen } from '../nav/model';
 
 import { RootViews } from '../RootViews';
+import { forecastStyle } from './styles';
 
 type ForecastScreenProps = NativeStackScreenProps<RootViews, 'Forecast'>;
 
 const ModalScreen = () => {
   return (
     <View>
-      <Text 
-          style={{
-            color: 'white',
-            fontSize: 20,
-          }}>I'm a modal.</Text>
+      <Text style={ forecastStyle.heading1 }>I'm a modal.</Text>
 
           <CloseScreen title='Close Modal1'/>
     </View>
@@ -35,20 +32,8 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
   }
 
   return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'purple',              
-        }
-      }> 
-        <Text 
-          style={{
-            color: 'white',
-            fontSize: 20,
-          }}>Forecast</Text>
+      <View style={ forecastStyle.component }> 
+        <Text style={ forecastStyle.heading1 }>Forecast</Text>
 
         <OpenScreen
           label='Modal1'

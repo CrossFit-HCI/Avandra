@@ -10,6 +10,6 @@ interface BorderTheme {
 export const borderTheme: BorderTheme = {
     component: {
         borderColor: 'black',
-        borderWidth: 2,
+        borderWidth: 0.3,
     }
 }

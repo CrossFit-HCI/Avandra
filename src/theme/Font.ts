@@ -31,11 +31,11 @@ interface FontTheme {
 const fontFamily: string = "Arial";
 const fontColor: string = "black";
 
-const fontTheme: FontTheme = {
+export const fontTheme: FontTheme = {
     heading1Font: {
         family: fontFamily,
         color: fontColor,
-        size: 0,
+        size: 20,
         style: "",
         weight: ""
     },
@@ -54,5 +54,3 @@ const fontTheme: FontTheme = {
         weight: ""
     }
 }
-
-export default fontTheme;
