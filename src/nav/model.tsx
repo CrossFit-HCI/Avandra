@@ -1,10 +1,12 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from "react";
-import { Button, GestureResponderEvent, View } from "react-native";
+import { Button, GestureResponderEvent, Pressable, Text, View } from "react-native";
 
 import { Maybe, just, nothing } from "@heades/fp-lib";
 import { BinTree, empty, insert, lookup, mkKeyString } from "@heades/fp-lib";
+
+import { navBarButtonStyleSheet, navComponentButtonStyleSheet } from "./styles";
 
 interface NavOpened {
     status: 'opened';
@@ -286,9 +288,24 @@ export const NaviButton = (props:NavButtonProps) => {
     }
 
     return (
-        <Button title={props.title} onPress={onPressCallback} />
+        <Pressable onPress={onPressCallback} style={navComponentButtonStyleSheet.primaryContainer}>
+            <Text style={navComponentButtonStyleSheet.primaryText}>{props.title}</Text>
+        </Pressable>
     )
 }
+
+export const NavBarButton = (props:NavButtonProps) => {    
+    const onPressCallback = (event: GestureResponderEvent) => {
+        props.onPress(event);
+    }
+
+    return (
+        <Pressable onPress={onPressCallback} style={navBarButtonStyleSheet.primaryContainer}>
+            <Text style={navBarButtonStyleSheet.primaryText}>{props.title}</Text>
+        </Pressable>
+    )
+}
+
 interface OpenModalProps {
     title: string,
     label: string

@@ -1,8 +1,8 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
 import { Button, View } from 'react-native';
 
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens  } from "../nav/model";
-import { navContainerBarViewStyle, navContainerViewStyle } from '../nav/styles';
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens, NavBarButton  } from "../nav/model";
+import { navBarStyleSheet, navComponentStyleSheet } from '../nav/styles';
 
 const NavView = ({context} : {context: NavContext}) => {  
   const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));
@@ -11,12 +11,14 @@ const NavView = ({context} : {context: NavContext}) => {
   const dispatch = useAppDispatch();
   const togNav = () => dispatch(toggleNav());  
 
+  const toggleButtonTitle: string = isNavOpened ? 'Close' : 'Open';
+
   return (    
-      <View style={navContainerViewStyle(isNavOpened).container}>          
+      <View style={navComponentStyleSheet(isNavOpened).container}>          
         <View
-          style={navContainerBarViewStyle.container}>                    
-          <Button 
-            title="Toggle Nav"  onPress={() => {togNav()}}/>
+          style={navBarStyleSheet.bar}>                    
+          <NavBarButton 
+            title={toggleButtonTitle}  onPress={() => {togNav()}}/>
         </View>        
         {currentScreen}
       </View>      
