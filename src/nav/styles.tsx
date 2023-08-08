@@ -34,7 +34,7 @@ export const navComponentButtonStyleSheet = StyleSheet.create({
     },
     primaryText: {
         color: 'white',
-        fontSize: 15,        
+        fontSize: 18,        
     }
 });
 
