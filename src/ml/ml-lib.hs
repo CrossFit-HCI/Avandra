@@ -6,12 +6,16 @@
 import Nat
 import Vect
 
+------------------
+-- Lines        --
+------------------
+
 line :: Double -> (Double, Double) -> Double
 line x (w,b) = (x * w) + b
 
---------------
--- Tensors  --
---------------
+------------------
+-- Tensors      --
+------------------
 
 data Tensor :: (Nat -> * -> *) where
       Scalar :: a -> Tensor Z a                             -- Tensor 0
