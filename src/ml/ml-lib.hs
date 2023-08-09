@@ -35,4 +35,5 @@ module MLlib where
     instance Show a => Show (Tens m a) where
         show = showTensor
 
-    type Tensor m = Tens m Double  
+    type Scalar = Double
+    type Tensor m = Tens m Scalar
