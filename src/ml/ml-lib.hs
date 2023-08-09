@@ -19,21 +19,20 @@ module MLlib where
     -- Tensors      --
     ------------------
 
-    data Tensor :: (Nat -> * -> *) where
-        Scalar :: a -> Tensor Z a                             -- Tensor 0
-        Tensors :: Vect (S n) (Tensor m a) -> Tensor (S m) a  -- Tensor (m+1)
+    data Tens :: (Nat -> * -> *) where
+        Scalar :: a -> Tens Z a                           -- Tensor 0
+        Tensors :: Vect (S n) (Tens m a) -> Tens (S m) a  -- Tensor (m+1)
 
-    showTensor :: Show a => Tensor m a -> String
+    showTensor :: Show a => Tens m a -> String
     showTensor (Scalar d) = show d
     showTensor (Tensors ts) = "["++(showVectTensor ts)++"]"
         where
-            showVectTensor :: Show a => Vect n (Tensor m a) -> String
+            showVectTensor :: Show a => Vect n (Tens m a) -> String
             showVectTensor Empty = ""
             showVectTensor (Cons t Empty) = showTensor t
             showVectTensor (Cons t ts) = (showTensor t) ++ "," ++ (showVectTensor ts)
 
-    instance Show a => Show (Tensor m a) where
+    instance Show a => Show (Tens m a) where
         show = showTensor
 
-
-
+    type Tensor m = Tens m Double  
