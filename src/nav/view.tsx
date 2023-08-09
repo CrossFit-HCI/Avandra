@@ -19,7 +19,7 @@ const NavView = ({context} : {context: NavContext}) => {
           style={navBarStyleSheet.bar}>                    
           <NavBarButton 
             title={toggleButtonTitle}  onPress={() => {togNav()}}/>
-        </View>        
+        </View>            
         {currentScreen}
       </View>      
   )

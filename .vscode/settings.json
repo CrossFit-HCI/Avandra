@@ -4,6 +4,7 @@
         "childs",
         "Idents",
         "Navi",
-        "reduxjs"
+        "reduxjs",
+        "unrecognised"
     ]
 }

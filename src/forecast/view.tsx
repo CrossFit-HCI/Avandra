@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import Nav, { NavScreen, NaviButton } from "../nav/view";
 import { CloseScreen, OpenScreen } from '../nav/model';
+import { navCustomViewStyleSheet } from '../nav/styles';
 
 import { RootViews } from '../RootViews';
 import { forecastStyle } from './styles';
@@ -23,7 +24,7 @@ const ModalScreen = () => {
 const Forecast = ({ navigation }:ForecastScreenProps) => {
   let navMainScreen = () => {
     return (
-      <View>
+      <View style={navCustomViewStyleSheet.container}>
         <NaviButton
           onPress={() => navigation.navigate('Journals')}
           title="Journals" />         

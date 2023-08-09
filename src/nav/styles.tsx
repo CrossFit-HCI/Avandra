@@ -2,18 +2,19 @@ import { StyleSheet } from "react-native";
 
 import { colorTheme, borderTheme } from "../theme/theme";
 
+let navHeight: number = 50;
+
 export const navComponentStyleSheet = (isNavOpened: boolean) => {
     // Used to hide and show part of the Nav; this mimics the Nav being open or
-    // closed.
-    let navHeight: number = 50;
+    // closed.    
     let navBottom: number = isNavOpened ? 0 : -42;
     
     return StyleSheet.create({
-        container: {
+        container: {            
             height: `${navHeight}%`,
             width: '100%',
-            justifyContent: 'center',      
-            alignItems: 'center',
+            flexDirection: 'column',  
+            alignItems: 'baseline',
             backgroundColor: colorTheme.component.background,
             position: 'absolute',
             bottom: `${navBottom}%`,
@@ -22,6 +23,14 @@ export const navComponentStyleSheet = (isNavOpened: boolean) => {
         }        
     });
 };
+
+export const navCustomViewStyleSheet = StyleSheet.create({
+    container: {
+        width: '100%',
+        flex: 2,
+        flexDirection: 'column'
+    }
+});
 
 export const navComponentButtonStyleSheet = StyleSheet.create({
     primaryContainer: {
