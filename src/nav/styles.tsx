@@ -10,12 +10,12 @@ export const navComponentStyleSheet = (isNavOpened: boolean) => {
     let navBottom: number = isNavOpened ? 0 : -42;
     
     return StyleSheet.create({
-        container: {            
+        container: {  
+            flex: 1,                      
             height: `${navHeight}%`,
             width: '100%',
-            flexDirection: 'column',  
-            alignItems: 'baseline',
-            backgroundColor: colorTheme.component.background,
+            alignContent: 'flex-end',
+            backgroundColor: 'blue', //colorTheme.component.background,
             position: 'absolute',
             bottom: `${navBottom}%`,
             borderTopColor: borderTheme.component.borderColor,
@@ -26,9 +26,9 @@ export const navComponentStyleSheet = (isNavOpened: boolean) => {
 
 export const navCustomViewStyleSheet = StyleSheet.create({
     container: {
-        width: '100%',
-        flex: 2,
-        flexDirection: 'column'
+        flex: 7,
+        width: '100%',        
+        backgroundColor: 'red'
     }
 });
 
@@ -52,10 +52,9 @@ export const navBarStyleSheet = StyleSheet.create({
         flex: 1,
         width: '100%',
         justifyContent: 'center',      
-        alignItems: 'flex-end',
-        position: 'absolute',
-        top: 2.5,
-        padding: 8
+        alignItems: 'flex-end',        
+        padding: 8,
+        backgroundColor: 'green'
     }
 });
 

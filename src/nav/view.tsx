@@ -1,8 +1,8 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens, NavBarButton  } from "../nav/model";
-import { navBarStyleSheet, navComponentStyleSheet } from '../nav/styles';
+import { navBarStyleSheet, navComponentStyleSheet, navCustomViewStyleSheet } from '../nav/styles';
 
 const NavView = ({context} : {context: NavContext}) => {  
   const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));
@@ -13,14 +13,14 @@ const NavView = ({context} : {context: NavContext}) => {
 
   const toggleButtonTitle: string = isNavOpened ? 'Close' : 'Open';
 
-  return (    
+  return (
       <View style={navComponentStyleSheet(isNavOpened).container}>          
-        <View
-          style={navBarStyleSheet.bar}>                    
-          <NavBarButton 
-            title={toggleButtonTitle}  onPress={() => {togNav()}}/>
-        </View>            
-        {currentScreen}
+        <View style={navBarStyleSheet.bar}>                    
+          <NavBarButton title={toggleButtonTitle}  onPress={() => {togNav()}}/>
+        </View>  
+        <View style={navCustomViewStyleSheet.container}>
+          {currentScreen}
+        </View>
       </View>      
   )
 }

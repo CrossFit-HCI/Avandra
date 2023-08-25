@@ -5,7 +5,6 @@ import { colorTheme, fontTheme } from "../theme/theme";
 export const forecastStyle = StyleSheet.create({
         component: {
             flex: 1,
-            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: colorTheme.component.background

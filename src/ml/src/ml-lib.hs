@@ -13,8 +13,8 @@ module MLlib where
     ------------------
 
     data Tens :: (Nat -> * -> *) where
-        Scalar :: a -> Tens Z a                           -- Tensor 0
-        Tensor :: Vect (S n) (Tens m a) -> Tens (S m) a  -- Tensor (m+1)
+        Scalar :: a -> Tens Zero a                         -- Tensor 0
+        Tensor :: Vect (Suc n) (Tens m a) -> Tens (Suc m) a  -- Tensor (m+1)
 
     showTensor :: Show a => Tens m a -> String
     showTensor (Scalar d) = show d

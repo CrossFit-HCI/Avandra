@@ -1,26 +1,23 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE KindSignatures #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
 module Vect where
 
-    import           Data.Singletons        
-
+    import Data.Singletons        
     import Nat    
-
+    
     data Vect :: (Nat -> * -> *) where
-        Empty :: Vect Z a
-        Cons  :: a -> Vect m a -> Vect (S m) a
+        Empty :: Vect Zero a
+        Cons  :: a -> Vect m a -> Vect (Suc m) a
 
-    showVect :: Show a => Vect m a -> String
-    showVect Empty = ""
-    showVect xs    = "["++(showVectHelper xs)++"]"
-        where
-            showVectHelper (Cons x Empty) = show x
-            showVectHelper v = foldrVect (\x r -> (show x) ++ ","++r) "" v
+    instance Show a => Show (Vect n a) where
+        show = show . toList
 
-    headVect :: Vect (S m) a -> a
+    headVect :: Vect (Suc m) a -> a
     headVect (Cons d _) = d
 
     foldrVect :: (a -> b -> b) -> b -> Vect m a -> b
@@ -38,8 +35,9 @@ module Vect where
     zipVect Empty _ = Empty
     zipVect (Cons t1 ts1) (Cons t2 ts2) = Cons (t1,t2) $ zipVect ts1 ts2
 
-    fromList :: [a] -> Vect m a 
-    fromList = undefined
+    fromList :: Sing n -> [a] -> Vect n a
+    fromList SZero [] = Empty
+    fromList (SSuc m) (t:ts) = Cons t (fromList m ts)
 
     toList :: Vect m a -> [a]
     toList Empty = []

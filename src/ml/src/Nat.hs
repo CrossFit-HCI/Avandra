@@ -13,4 +13,4 @@ module Nat where
     import Data.Singletons.TH
 
     
-    $(singletons [d| data Nat = Z | S Nat |])
+    $(singletons [d| data Nat = Zero | Suc Nat |])
