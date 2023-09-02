@@ -24,6 +24,10 @@ module Vect where
     foldrVect f s Empty = s
     foldrVect f s (Cons x xs) = f x (foldrVect f s xs)
 
+    foldlVect :: (b -> a -> b) -> b -> Vect m a -> b
+    foldlVect f acc Empty = acc
+    foldlVect f acc (Cons x xs) = foldlVect f (f acc x) xs
+
     mapVect :: (a -> b) -> Vect m a -> Vect m b
     mapVect f Empty = Empty
     mapVect f (Cons x xs) = Cons (f x) (mapVect f xs)
