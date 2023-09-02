@@ -27,7 +27,7 @@ export const navComponentStyleSheet = (isNavOpened: boolean) => {
 export const navCustomViewStyleSheet = StyleSheet.create({
     container: {
         flex: 7,
-        padding: 1,
+        padding: 3,
         width: '100%',       
     }
 });
@@ -53,7 +53,7 @@ export const navBarStyleSheet = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'flex-end',  
-        gap: 1,      
+        gap: 8,      
         paddingHorizontal: 8,
         paddingBottom: 12,
         borderBottomColor: borderTheme.component.borderColor,
@@ -72,7 +72,6 @@ export const navBarButtonStyleSheet = StyleSheet.create({
         flex: 1,
         height: 30,
         width: 78,
-        marginHorizontal: 7,
         backgroundColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',

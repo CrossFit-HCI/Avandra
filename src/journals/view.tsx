@@ -4,21 +4,20 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import Nav, { NaviButton } from "../nav/view";
 import { RootViews } from '../RootViews';
+import { navCustomViewStyleSheet } from '../nav/styles';
 
 type JournalsScreenProps= NativeStackScreenProps<RootViews, 'Journals'>;
 
 const Journals = ({ navigation }:JournalsScreenProps) => {
   let navMainScreen = () => {
     return (
-      <View>
-        <Text>Journal List Nav</Text>
-
+      <View style={navCustomViewStyleSheet.container}>
         <NaviButton
           onPress={() => navigation.navigate('Forecast')}
           title="Forecast" />
       </View>
     )
-  }
+  };
 
   return (    
       <View
