@@ -4,7 +4,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer } from '@react-navigation/native';
 
 import Nav, { NavProvider, NavScreen, NaviButton } from "./nav/view";
-import { CloseScreen, OpenScreen } from './nav/model';
+import { CloseNavModal, OpenNavModal } from './nav/model';
 
 import { RootViews } from './RootViews';
 import Forecast from "./forecast/view";

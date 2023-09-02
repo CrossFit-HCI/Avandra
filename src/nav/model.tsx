@@ -311,7 +311,7 @@ interface OpenModalProps {
     label: string
 }
 
-export const OpenScreen = (props:OpenModalProps) => {
+export const OpenNavModal = (props:OpenModalProps) => {
     const dispatch = useAppDispatch();
 
     const onPressCallback = (event: GestureResponderEvent) => {
@@ -324,7 +324,7 @@ export const OpenScreen = (props:OpenModalProps) => {
     );
 }
 
-export const CloseScreen = (props:{title: string}) => {
+export const CloseNavModal = (props:{title: string}) => {
     const dispatch = useAppDispatch();
 
     const onPressCallback = (event: GestureResponderEvent) => {

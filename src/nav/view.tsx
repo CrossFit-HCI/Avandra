@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens, NavBarButton  } from "../nav/model";
 import { navBarStyleSheet, navComponentStyleSheet, navCustomViewStyleSheet } from '../nav/styles';
@@ -12,10 +12,12 @@ const NavView = ({context} : {context: NavContext}) => {
   const togNav = () => dispatch(toggleNav());  
 
   const toggleButtonTitle: string = isNavOpened ? 'Close' : 'Open';
+  const toggleInputLabel: string = isNavOpened ? 'Search' : 'Feedback';
 
   return (
       <View style={navComponentStyleSheet(isNavOpened).container}>          
-        <View style={navBarStyleSheet.bar}>                    
+        <View style={navBarStyleSheet.bar}>
+          <TextInput style={navBarStyleSheet.search} value={toggleInputLabel} />
           <NavBarButton title={toggleButtonTitle}  onPress={() => {togNav()}}/>
         </View>  
         <View style={navCustomViewStyleSheet.container}>

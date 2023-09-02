@@ -3,7 +3,7 @@ import { Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import Nav, { NavScreen, NaviButton } from "../nav/view";
-import { CloseScreen, OpenScreen } from '../nav/model';
+import { CloseNavModal, OpenNavModal } from '../nav/model';
 import { navCustomViewStyleSheet } from '../nav/styles';
 
 import { RootViews } from '../RootViews';
@@ -16,7 +16,7 @@ const ModalScreen = () => {
     <View>
       <Text style={ forecastStyle.heading1 }>I'm a modal.</Text>
 
-          <CloseScreen title='Close Modal1'/>
+      <CloseNavModal title='Close Modal1'/>
     </View>
   )
 }
@@ -36,9 +36,7 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
       <View style={ forecastStyle.component }> 
         <Text style={ forecastStyle.heading1 }>Forecast</Text>
 
-        <OpenScreen
-          label='Modal1'
-          title="Open Modal1" /> 
+        <OpenNavModal label='Modal1' title="Open Modal1" /> 
 
         <Nav main={navMainScreen()}>
             <NavScreen label='Modal1'  screen={ModalScreen()} />
