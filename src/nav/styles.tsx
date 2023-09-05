@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { colorTheme, borderTheme } from "../theme/theme";
+import { navControlButtonTheme } from "../theme/Button";
 
 let navHeight: number = 50;
 
@@ -33,18 +34,8 @@ export const navCustomViewStyleSheet = StyleSheet.create({
 });
 
 export const navComponentButtonStyleSheet = StyleSheet.create({
-    primaryContainer: {
-        height: 83,
-        width: 83,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 1
-    },
-    primaryText: {
-        color: 'white',
-        fontSize: 18,        
-    }
+    primaryContainer: navControlButtonTheme.container,
+    primaryText: navControlButtonTheme.text
 });
 
 export const navBarStyleSheet = StyleSheet.create({

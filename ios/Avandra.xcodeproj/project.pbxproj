@@ -12,6 +12,25 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		62B74C9B2AA789F10080D9FE /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C882AA789F10080D9FE /* Fontisto.ttf */; };
+		62B74C9C2AA789F10080D9FE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C892AA789F10080D9FE /* Octicons.ttf */; };
+		62B74C9D2AA789F10080D9FE /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8A2AA789F10080D9FE /* Feather.ttf */; };
+		62B74C9E2AA789F10080D9FE /* FontAwesome6_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8B2AA789F10080D9FE /* FontAwesome6_Regular.ttf */; };
+		62B74C9F2AA789F10080D9FE /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8C2AA789F10080D9FE /* Entypo.ttf */; };
+		62B74CA02AA789F10080D9FE /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8D2AA789F10080D9FE /* FontAwesome5_Brands.ttf */; };
+		62B74CA12AA789F10080D9FE /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8E2AA789F10080D9FE /* MaterialCommunityIcons.ttf */; };
+		62B74CA22AA789F10080D9FE /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C8F2AA789F10080D9FE /* AntDesign.ttf */; };
+		62B74CA32AA789F10080D9FE /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C902AA789F10080D9FE /* Foundation.ttf */; };
+		62B74CA42AA789F10080D9FE /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C912AA789F10080D9FE /* Ionicons.ttf */; };
+		62B74CA52AA789F10080D9FE /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C922AA789F10080D9FE /* FontAwesome5_Solid.ttf */; };
+		62B74CA62AA789F10080D9FE /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C932AA789F10080D9FE /* FontAwesome5_Regular.ttf */; };
+		62B74CA72AA789F10080D9FE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C942AA789F10080D9FE /* FontAwesome.ttf */; };
+		62B74CA82AA789F10080D9FE /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C952AA789F10080D9FE /* Zocial.ttf */; };
+		62B74CA92AA789F10080D9FE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C962AA789F10080D9FE /* EvilIcons.ttf */; };
+		62B74CAA2AA789F10080D9FE /* FontAwesome6_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C972AA789F10080D9FE /* FontAwesome6_Solid.ttf */; };
+		62B74CAB2AA789F10080D9FE /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C982AA789F10080D9FE /* SimpleLineIcons.ttf */; };
+		62B74CAC2AA789F10080D9FE /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C992AA789F10080D9FE /* FontAwesome6_Brands.ttf */; };
+		62B74CAD2AA789F10080D9FE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B74C9A2AA789F10080D9FE /* MaterialIcons.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-Avandra-AvandraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Avandra-AvandraTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -41,6 +60,25 @@
 		5709B34CF0A7D63546082F79 /* Pods-Avandra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Avandra.release.xcconfig"; path = "Target Support Files/Pods-Avandra/Pods-Avandra.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Avandra-AvandraTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Avandra-AvandraTests.debug.xcconfig"; path = "Target Support Files/Pods-Avandra-AvandraTests/Pods-Avandra-AvandraTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Avandra.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Avandra.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62B74C882AA789F10080D9FE /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
+		62B74C892AA789F10080D9FE /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		62B74C8A2AA789F10080D9FE /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
+		62B74C8B2AA789F10080D9FE /* FontAwesome6_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome6_Regular.ttf; sourceTree = "<group>"; };
+		62B74C8C2AA789F10080D9FE /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
+		62B74C8D2AA789F10080D9FE /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
+		62B74C8E2AA789F10080D9FE /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		62B74C8F2AA789F10080D9FE /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		62B74C902AA789F10080D9FE /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
+		62B74C912AA789F10080D9FE /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
+		62B74C922AA789F10080D9FE /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
+		62B74C932AA789F10080D9FE /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
+		62B74C942AA789F10080D9FE /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		62B74C952AA789F10080D9FE /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		62B74C962AA789F10080D9FE /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
+		62B74C972AA789F10080D9FE /* FontAwesome6_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome6_Solid.ttf; sourceTree = "<group>"; };
+		62B74C982AA789F10080D9FE /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		62B74C992AA789F10080D9FE /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome6_Brands.ttf; sourceTree = "<group>"; };
+		62B74C9A2AA789F10080D9FE /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Avandra/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Avandra-AvandraTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Avandra-AvandraTests.release.xcconfig"; path = "Target Support Files/Pods-Avandra-AvandraTests/Pods-Avandra-AvandraTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -92,6 +130,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				62B74C872AA789F10080D9FE /* Fonts */,
 			);
 			name = Avandra;
 			sourceTree = "<group>";
@@ -104,6 +143,33 @@
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-Avandra-AvandraTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		62B74C872AA789F10080D9FE /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				62B74C882AA789F10080D9FE /* Fontisto.ttf */,
+				62B74C892AA789F10080D9FE /* Octicons.ttf */,
+				62B74C8A2AA789F10080D9FE /* Feather.ttf */,
+				62B74C8B2AA789F10080D9FE /* FontAwesome6_Regular.ttf */,
+				62B74C8C2AA789F10080D9FE /* Entypo.ttf */,
+				62B74C8D2AA789F10080D9FE /* FontAwesome5_Brands.ttf */,
+				62B74C8E2AA789F10080D9FE /* MaterialCommunityIcons.ttf */,
+				62B74C8F2AA789F10080D9FE /* AntDesign.ttf */,
+				62B74C902AA789F10080D9FE /* Foundation.ttf */,
+				62B74C912AA789F10080D9FE /* Ionicons.ttf */,
+				62B74C922AA789F10080D9FE /* FontAwesome5_Solid.ttf */,
+				62B74C932AA789F10080D9FE /* FontAwesome5_Regular.ttf */,
+				62B74C942AA789F10080D9FE /* FontAwesome.ttf */,
+				62B74C952AA789F10080D9FE /* Zocial.ttf */,
+				62B74C962AA789F10080D9FE /* EvilIcons.ttf */,
+				62B74C972AA789F10080D9FE /* FontAwesome6_Solid.ttf */,
+				62B74C982AA789F10080D9FE /* SimpleLineIcons.ttf */,
+				62B74C992AA789F10080D9FE /* FontAwesome6_Brands.ttf */,
+				62B74C9A2AA789F10080D9FE /* MaterialIcons.ttf */,
+			);
+			name = Fonts;
+			path = "../node_modules/react-native-vector-icons/Fonts";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -200,7 +266,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -242,8 +309,27 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62B74CA62AA789F10080D9FE /* FontAwesome5_Regular.ttf in Resources */,
+				62B74C9B2AA789F10080D9FE /* Fontisto.ttf in Resources */,
+				62B74CA02AA789F10080D9FE /* FontAwesome5_Brands.ttf in Resources */,
+				62B74CA42AA789F10080D9FE /* Ionicons.ttf in Resources */,
+				62B74CA52AA789F10080D9FE /* FontAwesome5_Solid.ttf in Resources */,
+				62B74C9F2AA789F10080D9FE /* Entypo.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				62B74CA22AA789F10080D9FE /* AntDesign.ttf in Resources */,
+				62B74CA82AA789F10080D9FE /* Zocial.ttf in Resources */,
+				62B74CA32AA789F10080D9FE /* Foundation.ttf in Resources */,
+				62B74CAC2AA789F10080D9FE /* FontAwesome6_Brands.ttf in Resources */,
+				62B74C9D2AA789F10080D9FE /* Feather.ttf in Resources */,
+				62B74CAB2AA789F10080D9FE /* SimpleLineIcons.ttf in Resources */,
+				62B74CA92AA789F10080D9FE /* EvilIcons.ttf in Resources */,
+				62B74C9C2AA789F10080D9FE /* Octicons.ttf in Resources */,
+				62B74CA72AA789F10080D9FE /* FontAwesome.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				62B74CA12AA789F10080D9FE /* MaterialCommunityIcons.ttf in Resources */,
+				62B74CAA2AA789F10080D9FE /* FontAwesome6_Solid.ttf in Resources */,
+				62B74C9E2AA789F10080D9FE /* FontAwesome6_Regular.ttf in Resources */,
+				62B74CAD2AA789F10080D9FE /* MaterialIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +518,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Avandra-AvandraTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -459,6 +546,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-Avandra-AvandraTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = AvandraTests/Info.plist;

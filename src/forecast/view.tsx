@@ -2,12 +2,14 @@ import React from 'react';
 import { Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+
 import Nav, { NavScreen, NaviButton } from "../nav/view";
-import { CloseNavModal, OpenNavModal } from '../nav/model';
+import { CloseNavModal } from '../nav/model';
 import { navCustomViewStyleSheet } from '../nav/styles';
 
 import { RootViews } from '../RootViews';
 import { forecastStyle } from './styles';
+import { Card } from '../components/card';
 
 type ForecastScreenProps = NativeStackScreenProps<RootViews, 'Forecast'>;
 
@@ -32,17 +34,17 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
     )
   }
 
+  /* How to open a modal: 
+   * <OpenNavModal label='Modal1' title="Open Modal1" />  */
   return (
       <View style={ forecastStyle.component }> 
-        <Text style={ forecastStyle.heading1 }>Forecast</Text>
-
-        <OpenNavModal label='Modal1' title="Open Modal1" /> 
+        <Card />
 
         <Nav main={navMainScreen()}>
             <NavScreen label='Modal1'  screen={ModalScreen()} />
         </Nav>                
       </View>
-  )
-}
+  );
+};
 
 export default Forecast;
