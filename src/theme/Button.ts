@@ -1,5 +1,6 @@
 import { TextStyle, ViewStyle } from "react-native";
 
+// Move background/text color into the color theme:
 const backgroundColor = 'black';
 const textColor = 'white';
 const justifyContent = 'center';

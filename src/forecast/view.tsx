@@ -9,7 +9,7 @@ import { navCustomViewStyleSheet } from '../nav/styles';
 
 import { RootViews } from '../RootViews';
 import { forecastStyle } from './styles';
-import { Card } from '../components/card';
+import { Card, CardForecastHeader } from '../components/card';
 
 type ForecastScreenProps = NativeStackScreenProps<RootViews, 'Forecast'>;
 
@@ -38,7 +38,8 @@ const Forecast = ({ navigation }:ForecastScreenProps) => {
    * <OpenNavModal label='Modal1' title="Open Modal1" />  */
   return (
       <View style={ forecastStyle.component }> 
-        <Card />
+        <Card header={CardForecastHeader({markCompleted: false})}>
+        </Card>
 
         <Nav main={navMainScreen()}>
             <NavScreen label='Modal1'  screen={ModalScreen()} />
