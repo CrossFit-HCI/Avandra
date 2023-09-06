@@ -5,7 +5,8 @@ import { colorTheme, fontTheme, cardTheme } from "../theme/theme";
 export const forecastStyle = StyleSheet.create({
         component: {
             flex: 1,
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
+            paddingTop: 30,
             alignItems: 'center',
             backgroundColor: colorTheme.component.background,
             card: cardTheme

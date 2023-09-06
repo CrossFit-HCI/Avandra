@@ -16,8 +16,8 @@ interface CardTheme extends ViewStyle {
 export const cardTheme: CardTheme = {
     flex: 1,
     width: '90%',
-    maxHeight: '75%',
-    marginTop: 30,
+    maxHeight: '82%',
+    marginTop: 15,
     borderColor: borderTheme.card.borderColor,
     borderWidth: borderTheme.card.borderWidth,
     header: {
