@@ -6,7 +6,7 @@ const textColor = 'white';
 const justifyContent = 'center';
 const alignItems = 'center';
 
-interface ButtonTheme {
+export interface ButtonTheme {
     container: ViewStyle,
     text: TextStyle
 };

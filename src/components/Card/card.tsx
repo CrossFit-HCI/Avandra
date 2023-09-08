@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { ReactNode } from "react";
 
-import { cardTheme } from "../theme/Card";
+import { cardTheme } from "../../theme/Card";
 
 const CardBasicHeader = (description: string) => {    
     return (  

@@ -1,12 +1,17 @@
-import { FlexStyle, TextStyle, ViewStyle } from 'react-native';
-import { borderTheme } from './Border';
+import { TextStyle, ViewStyle } from 'react-native';
+import { borderTheme, IconTheme, iconTheme, ButtonTheme, cardHeaderButtonTheme } from './theme';
+
+interface IconStyle extends IconTheme {
+    iconSize: number
+}
 
 interface HeaderTheme extends ViewStyle {
     headerTextForecastContainer?: ViewStyle,
     headerTextContainer?: ViewStyle,
     headerText: TextStyle
     completedContainer: ViewStyle,
-    completedIcon: ViewStyle
+    buttonTheme: ButtonTheme,
+    iconTheme: IconStyle
 }
 
 interface CardTheme extends ViewStyle {    
@@ -51,7 +56,11 @@ export const cardTheme: CardTheme = {
             alignItems: 'center',
             justifyContent: 'center'
         },
-        completedIcon: {            
+        buttonTheme: cardHeaderButtonTheme,
+        iconTheme: {
+            iconSize: 30,
+            completed: iconTheme.completed,
+            uncompleted: iconTheme.uncompleted
         }
     }
 };
