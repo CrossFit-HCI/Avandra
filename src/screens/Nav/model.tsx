@@ -1,12 +1,12 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from "react";
-import { Button, GestureResponderEvent, Pressable, Text, View } from "react-native";
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from 'react';
+import { Button, GestureResponderEvent, Pressable, Text, View } from 'react-native';
 
-import { Maybe, just, nothing } from "@heades/fp-lib";
-import { BinTree, empty, insert, lookup, mkKeyString } from "@heades/fp-lib";
+import { Maybe, just, nothing } from '@heades/fp-lib';
+import { BinTree, empty, insert, lookup, mkKeyString } from '@heades/fp-lib';
 
-import { navBarButtonStyleSheet, navComponentButtonStyleSheet } from "./styles";
+import { navBarButtonStyleSheet, navComponentButtonStyleSheet } from './styles';
 
 interface NavOpened {
     status: 'opened';
@@ -18,18 +18,18 @@ interface NavClosed {
 
 type NavStatus = NavOpened | NavClosed;
 
-export const navOpened: NavStatus = {status: 'opened'}
-export const navClosed: NavStatus = {status: 'closed'}
+export const navOpened: NavStatus = {status: 'opened'};
+export const navClosed: NavStatus = {status: 'closed'};
 
 interface ContextLabel {
     index: number,
     label: string,
-    type: "ContextLabel"
+    type: 'ContextLabel'
 }
 
 const mkContextLabel = (index: number, label: string): ContextLabel => {
-    return {index: index, label: label, type: "ContextLabel"};
-}
+    return {index: index, label: label, type: 'ContextLabel'};
+};
 
 interface Screen {
     label: string,
@@ -57,11 +57,12 @@ export interface NavContext {
  * @param label The identifier of the modal.
  * @returns The `index` for the corresponding modal, or nothing.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const findScreen = (context: NavContext, label: string) => {
     return context.screens.stack.findIndex((value) => {
-        return value.label == label
+        return value.label == label;
     });
-}
+};
 
 export interface NavScreenProps {    
     label: string,
@@ -74,22 +75,22 @@ export const initialNavContext: NavContext = Object.freeze({
     modals: []
 });
 
-const extractScreens = (acc:Screen[], child: ReactNode): Screen[] => {           
+const extractScreens = (acc: Screen[], child: ReactNode): Screen[] => {           
     // We have to cast child.type, because NavScreen is a function component.         
     if (React.isValidElement(child) && typeof child.type != 'string') {
-        let component: JSXElementConstructor<any> = child.type;
+        const component: JSXElementConstructor<never> = child.type;
         // Make sure we only have NavScreen's in the group:
         if (component.name == 'NavScreen') {
             // Now the child.props should be a NavScreenProps:
             acc.push(child.props);
             return acc;
         } else {
-            throw new Error ('A NavScreen is the only component allowable in a Nav group.')  
+            throw new Error ('A NavScreen is the only component allowable in a Nav group.');  
         }      
     } else {
-        throw new Error ('extractGroup: child is not a valid React element.')
+        throw new Error ('extractGroup: child is not a valid React element.');
     }          
-}
+};
 
 /**
  * Get the screens from the children of a Nav component.
@@ -108,7 +109,7 @@ export const createNavContext = (main: ReactElement, children: ReactNode): NavCo
             screens: {stack: screensArray}
         };
     }
-}
+};
 
 interface NavState {
     /** Used to toggle the Nav from opened to closed. */
@@ -140,16 +141,16 @@ const initialNavState: NavState = {
     currentScreen: just (mkContextLabel(mainScreenIndex, mainScreenLabel)),
     previousScreen: nothing,    
     screenMap: empty()
-}
+};
 
 /**
  * A selector for determining if the Nav is opened.
  * @param state a Redux state containing the `NavState`.
  * @returns `true` if the Nav's status is set to open, and `false` otherwise.
  */
-export const isNavOpenedSelector = (state:{nav: NavState}) => {
-    return state.nav.navStatus == navOpened
-}
+export const isNavOpenedSelector = (state: {nav: NavState}) => {
+    return state.nav.navStatus == navOpened;
+};
 
 const navSlice = createSlice({
     name: 'navStatus',
@@ -177,10 +178,10 @@ const navSlice = createSlice({
          */
         ejectScreen: (state) => {
             switch (state.previousScreen.type) {
-                case ("just"): 
+                case ('just'): 
                     state.currentScreen = just(state.previousScreen.value);
                     state.previousScreen = nothing;
-                case ("nothing"): 
+                case ('nothing'): 
                     return;
             }            
         },
@@ -189,26 +190,26 @@ const navSlice = createSlice({
          * @param payload The label of the modal.
          */
         injectScreen: (state, {payload}) => {
-            let label: string = payload;
-            let screenIndexM: Maybe<number> = lookup(mkKeyString(label), state.screenMap);
+            const label: string = payload;
+            const screenIndexM: Maybe<number> = lookup(mkKeyString(label), state.screenMap);
 
             switch(screenIndexM.type) {
-                case "just":
+                case 'just':
                     switch (state.currentScreen.type) {                        
-                        case "just":
+                        case 'just':
                             if (state.currentScreen.value.label != label) {
                                 state.previousScreen = state.currentScreen;
                                 state.currentScreen = just(mkContextLabel(screenIndexM.value, label));
                             }
 
                             return state;
-                        case "nothing":
+                        case 'nothing':
                             state.previousScreen = nothing;
                             state.currentScreen = just(mkContextLabel(screenIndexM.value, label));
-                            return
+                            return;
                     }           
-                case "nothing":
-                    return
+                case 'nothing':
+                    return;
             }
         },       
         /**
@@ -216,8 +217,8 @@ const navSlice = createSlice({
          * @param payload A `NavGroupState` containing the modal screens.
          */
         linkScreens: (state, action) => {
-            let key: string = action.payload.key;
-            let value: number = action.payload.value;
+            const key: string = action.payload.key;
+            const value: number = action.payload.value;
 
             state.screenMap = insert(mkKeyString(key), value, state.screenMap);
 
@@ -227,8 +228,8 @@ const navSlice = createSlice({
 });
 
 export const { openNav, closeNav, toggleNav, injectMainView, injectScreen: injectScreen, ejectScreen, linkScreens } = navSlice.actions;
-export const useAppDispatch: () => AppDispatch = useDispatch
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const store = configureStore({ 
     reducer: {
@@ -239,15 +240,15 @@ const store = configureStore({
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 
-export const currentScreenSelector = (state:RootState) => {
-    return state.nav.currentScreen
-}
+export const currentScreenSelector = (state: RootState) => {
+    return state.nav.currentScreen;
+};
 
 export const getNavScreen = (context: NavContext, state: RootState): ReactNode => {            
     const currentScreen = currentScreenSelector(state);  
 
     switch (currentScreen.type) {
-        case ("just"): {
+        case ('just'): {
             if (currentScreen.value.label == mainScreenLabel && currentScreen.value.index == mainScreenIndex) {
                 return context.mainScreen;
             } else {
@@ -255,7 +256,7 @@ export const getNavScreen = (context: NavContext, state: RootState): ReactNode =
             }
         }        
     }
-}
+};
 
 /****************************************************
  *  Components for utilizing the store and context. *
@@ -277,43 +278,44 @@ interface NavButtonProps {
  * @returns A RN Button with the onPress callback wrapped to manage the state of
  * the Nav properly.
  */
-export const NaviButton = (props:NavButtonProps) => {
+export const NaviButton = (props: NavButtonProps) => {
     const dispatch = useAppDispatch();
-    const closeTheNav = () => dispatch(closeNav())
+    const closeTheNav = () => dispatch(closeNav());
     
     const onPressCallback = (event: GestureResponderEvent) => {
         // Make sure the Nav is closed before transitioning to a new screen.
         closeTheNav();
         props.onPress(event);
-    }
+    };
 
     return (
         <Pressable onPress={onPressCallback} style={navComponentButtonStyleSheet.primaryContainer}>
             <Text style={navComponentButtonStyleSheet.primaryText}>{props.title}</Text>
         </Pressable>
-    )
-}
+    );
+};
 
-export const NavBarButton = (props:NavButtonProps) => {    
+export const NavBarButton = (props: NavButtonProps) => {    
     const onPressCallback = (event: GestureResponderEvent) => {
         props.onPress(event);
-    }
+    };
 
     return (
         <Pressable onPress={onPressCallback} style={navBarButtonStyleSheet.primaryContainer}>
             <Text style={navBarButtonStyleSheet.primaryText}>{props.title}</Text>
         </Pressable>
-    )
-}
+    );
+};
 
 interface OpenModalProps {
     title: string,
     label: string
 }
 
-export const OpenNavModal = (props:OpenModalProps) => {
+export const OpenNavModal = (props: OpenModalProps) => {
     const dispatch = useAppDispatch();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onPressCallback = (event: GestureResponderEvent) => {
         // Switch the current Nav screen to the modal with label.
         dispatch(injectScreen(props.label));
@@ -322,11 +324,12 @@ export const OpenNavModal = (props:OpenModalProps) => {
     return (
         <Button title={props.title} onPress={onPressCallback} />
     );
-}
+};
 
-export const CloseNavModal = (props:{title: string}) => {
+export const CloseNavModal = (props: {title: string}) => {
     const dispatch = useAppDispatch();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onPressCallback = (event: GestureResponderEvent) => {
         // Switch the current Nav screen to the modal with label.
         dispatch(ejectScreen());
@@ -335,7 +338,7 @@ export const CloseNavModal = (props:{title: string}) => {
     return (
         <Button title={props.title} onPress={onPressCallback} />
     );
-}
+};
 
 export interface NavProviderProps {
     children: ReactNode;
@@ -344,10 +347,10 @@ export interface NavProviderProps {
 /**
  * The Nav Provider.
  */
-export default ({children} : NavProviderProps) => {
+export default ({children}: NavProviderProps) => {
     return (
         <Provider store={store}>
             {children}            
         </Provider>
-    )
-}
+    );
+};

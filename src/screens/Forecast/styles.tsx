@@ -1,6 +1,10 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
-import { colorTheme, fontTheme, cardTheme } from "../theme/theme";
+import { colorTheme, fontTheme } from '../../designFramework/theme';
+
+import { cardStyle } from '../../theme/Card/styles';
+
+export { iconStyle  } from '../../theme/Card/styles';
 
 export const forecastStyle = StyleSheet.create({
         component: {
@@ -9,7 +13,7 @@ export const forecastStyle = StyleSheet.create({
             paddingTop: 30,
             alignItems: 'center',
             backgroundColor: colorTheme.component.background,
-            card: cardTheme
+            card: cardStyle
         },
 
         heading1: {

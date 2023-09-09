@@ -18,4 +18,4 @@ export const colorTheme: ColorTheme = {
     border: {
         primary: 'rgba(0, 0, 0, .2)'
     }
-}
+};

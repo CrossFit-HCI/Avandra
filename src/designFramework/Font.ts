@@ -28,29 +28,29 @@ interface FontTheme {
     heading3Font: Heading3Font
 }
 
-const fontFamily: string = "Arial";
-const fontColor: string = "black";
+const fontFamily: string = 'Arial';
+const fontColor: string = 'black';
 
 export const fontTheme: FontTheme = {
     heading1Font: {
         family: fontFamily,
         color: fontColor,
         size: 20,
-        style: "",
-        weight: ""
+        style: '',
+        weight: ''
     },
     heading2Font: {
         family: fontFamily,
         color: fontColor,
         size: 0,
-        style: "",
-        weight: ""
+        style: '',
+        weight: ''
     },
     heading3Font: {
         family: fontFamily,
         color: fontColor,
         size: 0,
-        style: "",
-        weight: ""
+        style: '',
+        weight: ''
     }
-}
+};

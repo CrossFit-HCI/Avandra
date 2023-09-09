@@ -1,10 +1,10 @@
 import React, { ReactElement, ReactNode, createElement, useState } from 'react';
 import { TextInput, View } from 'react-native';
 
-import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens, NavBarButton  } from "../nav/model";
-import { navBarStyleSheet, navComponentStyleSheet, navCustomViewStyleSheet } from '../nav/styles';
+import NavProvider, { NavContext, NavScreenProps, getNavScreen, createNavContext, NaviButton, useAppDispatch, toggleNav, useAppSelector, isNavOpenedSelector, linkScreens, NavBarButton  } from './model';
+import { navBarStyleSheet, navComponentStyleSheet, navCustomViewStyleSheet } from './styles';
 
-const NavView = ({context} : {context: NavContext}) => {  
+const NavView = ({context}: {context: NavContext}) => {  
   const isNavOpened = useAppSelector((state) => isNavOpenedSelector(state));
   const currentScreen = useAppSelector((state) => getNavScreen(context, state));    
 
@@ -18,33 +18,29 @@ const NavView = ({context} : {context: NavContext}) => {
       <View style={navComponentStyleSheet(isNavOpened).container}>          
         <View style={navBarStyleSheet.bar}>
           <TextInput style={navBarStyleSheet.search} value={toggleInputLabel} />
-          <NavBarButton title={toggleButtonTitle}  onPress={() => {togNav()}}/>
+          <NavBarButton title={toggleButtonTitle}  onPress={() => {togNav();}}/>
         </View>  
         <View style={navCustomViewStyleSheet.container}>
           {currentScreen}
         </View>
       </View>      
-  )
-}
+  );
+};
 
-export const NavScreen = ({label, screen}:NavScreenProps) => { 
-  return createElement('NavScreen', {label: label, screen: screen}, <View/>) 
-}
-
-interface NavModalsProps {
-  children: ReactNode;
-}
+export const NavScreen = ({label, screen}: NavScreenProps) => { 
+  return createElement('NavScreen', {label: label, screen: screen}, <View/>); 
+};
 
 export interface NavScreensProps {
   children: ReactNode;
   main: ReactElement;
 }
 
-export const Nav = ({children, main}:NavScreensProps) => {  
+export const Nav = ({children, main}: NavScreensProps) => {  
   const dispatch = useAppDispatch();
 
   // 1. Extract the screen data from each of the children.  
-  let newContext = createNavContext(main, children);
+  const newContext = createNavContext(main, children);
 
   // 2. Link the context with the Redux state.
   newContext.screens.stack.map((screen, index) => {
@@ -55,7 +51,7 @@ export const Nav = ({children, main}:NavScreensProps) => {
 
   // 3. Render the main screen:
   return  <NavView context={context}/>;
-}
+};
 
 /* We don't want library users to have access to the view model. So we export 
  * the provider here. */

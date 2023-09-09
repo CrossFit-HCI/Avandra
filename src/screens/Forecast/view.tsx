@@ -3,16 +3,16 @@ import { Pressable, Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Nav, { NavScreen, NaviButton } from "../nav/view";
-import { CloseNavModal } from '../nav/model';
-import { navCustomViewStyleSheet } from '../nav/styles';
+import Nav, { NavScreen, NaviButton } from '../Nav/view';
+import { CloseNavModal } from '../Nav/model';
+import { navCustomViewStyleSheet } from '../Nav/styles';
 
-import { RootViews } from '../RootViews';
-import { forecastStyle } from './styles';
-import { Card } from '../components/Card/card';
+import { RootViews } from '../../RootViews';
+import { forecastStyle, iconStyle } from './styles';
+import { Card } from '../../theme/Card/view';
 
-import { Journal, TrainingBlock, getJournal } from '../model';
-import { Hrule } from '../components/hrule';
+import { Journal, TrainingBlock, getJournal } from '../../model/model';
+import { Hrule } from '../../theme/Hrule/view';
 
 type ForecastScreenProps = NativeStackScreenProps<RootViews, 'Forecast'>;
 
@@ -23,25 +23,23 @@ const ModalScreen = () => {
 
       <CloseNavModal title='Close Modal1'/>
     </View>
-  )
-}
+  );
+};
 
 const CardForecastHeader = (journalTitle: string, markCompleted: boolean) => { 
-  let headerTheme = forecastStyle.component.card.header;
-  let iconCompleted = headerTheme.iconTheme.completed;
-  let iconUncompleted = headerTheme.iconTheme.uncompleted;
-  let icon = markCompleted ? iconCompleted : iconUncompleted;
+  const cardTheme = forecastStyle.component.card;  
+  const icon = markCompleted ? iconStyle.completedIcon : iconStyle.uncompletedIcon;
 
   return (
       <>
-          <View style={ headerTheme.completedContainer }>
-              <Icon name={ icon } size={headerTheme.iconTheme.iconSize} />
+          <View style={ cardTheme.completedContainer }>
+              <Icon name={ icon } size={iconStyle.size} />
           </View>
-          <View style={ headerTheme.headerTextForecastContainer }>
-              <Text style={ headerTheme.headerText }>{journalTitle}</Text>
+          <View style={ cardTheme.headerTextForecastContainer }>
+              <Text style={ cardTheme.headerText }>{journalTitle}</Text>
           </View>
-          <Pressable style={ headerTheme.buttonTheme.container }>
-              <Text style={ headerTheme.buttonTheme.text }>Go!</Text>
+          <Pressable style={ cardTheme.headerButtonStyle }>
+              <Text style={ cardTheme.headerButtonTextStyle }>Go!</Text>
           </Pressable>
       </>
   );
@@ -49,22 +47,22 @@ const CardForecastHeader = (journalTitle: string, markCompleted: boolean) => {
 
 interface CardForecastProps {
   journal: Journal
-};
+}
 
 interface TrainingBlockListViewProps {
   trainingBlocks: TrainingBlock[]
-};
+}
 
 const TrainingBlockListView = ({ trainingBlocks }: TrainingBlockListViewProps) => {
-  let totalTrainingBlocks: number = trainingBlocks.length;
+  const totalTrainingBlocks: number = trainingBlocks.length;
   /* We can only fit 12 training block entires with the current dimensions. So
    * we end up with 11 horizontal rules total. */
-  let totalEntries: number = totalTrainingBlocks <= 12 ? totalTrainingBlocks : 12;
+  const totalEntries: number = totalTrainingBlocks <= 12 ? totalTrainingBlocks : 12;
 
   return (
     Array.from({length: totalEntries}, (_, i) => i).map((i) => {
-      let index: string = i+1 < 10 ? ` ${i+1}` : `${i+1}`;      
-      let hrule: JSX.Element = i < totalEntries - 1 ? <Hrule /> : <></>;
+      const index: string = i + 1 < 10 ? ` ${i + 1}` : `${i + 1}`;      
+      const hrule: JSX.Element = i < totalEntries - 1 ? <Hrule /> : <></>;
       
       return (
         <>
@@ -86,7 +84,7 @@ const CardForecast = ({ journal }: CardForecastProps) => {
 };
 
 const Forecast = ({ navigation }: ForecastScreenProps) => {
-  let navMainScreen = () => {
+  const navMainScreen = () => {
     return (
       <View style={navCustomViewStyleSheet.container}>
         <NaviButton
@@ -96,7 +94,7 @@ const Forecast = ({ navigation }: ForecastScreenProps) => {
     );
   };
 
-  let journal: Journal = getJournal();
+  const journal: Journal = getJournal();
 
   /* How to open a modal: 
    * <OpenNavModal label='Modal1' title="Open Modal1" />  */

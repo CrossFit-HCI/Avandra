@@ -2,9 +2,9 @@ import React, { ReactNode } from 'react';
 import { Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import Nav, { NaviButton } from "../nav/view";
+import Nav, { NaviButton } from "../Nav/view";
 import { RootViews } from '../RootViews';
-import { navCustomViewStyleSheet } from '../nav/styles';
+import { navCustomViewStyleSheet } from '../Nav/styles';
 
 type JournalsScreenProps= NativeStackScreenProps<RootViews, 'Journals'>;
 

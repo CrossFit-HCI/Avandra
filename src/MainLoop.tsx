@@ -1,14 +1,12 @@
 import React, { ReactNode } from 'react';
-import { Text, View} from 'react-native';
-import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Nav, { NavProvider, NavScreen, NaviButton } from "./nav/view";
-import { CloseNavModal, OpenNavModal } from './nav/model';
+import { NavProvider } from './screens/Nav/view';
 
 import { RootViews } from './RootViews';
-import Forecast from "./forecast/view";
-import Journals from "./journals/view"
+import Forecast from './screens/Forecast/view';
+import Journals from './screens/Journals/view';
 
 export interface MainProps {
   children: ReactNode;
@@ -26,7 +24,7 @@ const MainLoop = () => {
         </AVScreenStack.Navigator>
       </NavigationContainer>
     </NavProvider>
-  )
+  );
 };
 
 export default MainLoop;

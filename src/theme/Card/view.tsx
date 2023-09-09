@@ -1,12 +1,12 @@
-import { Text, View } from "react-native";
-import { ReactNode } from "react";
+import { Text, View } from 'react-native';
+import { ReactNode } from 'react';
 
-import { cardTheme } from "../../theme/Card";
+import { cardStyle } from './styles';
 
 const CardBasicHeader = (description: string) => {    
     return (  
-        <View style={ cardTheme.header.headerTextContainer }>
-            <Text style={ cardTheme.header.headerText }>{description}</Text>
+        <View style={ cardStyle.headerTextContainer }>
+            <Text style={ cardStyle.headerText }>{description}</Text>
         </View>
     );
 };
@@ -14,12 +14,12 @@ const CardBasicHeader = (description: string) => {
 interface CardProps {
     header: ReactNode,
     children: ReactNode
-};
+}
 
 export const Card = ({header, children}: CardProps) => {
     return (
-        <View style={cardTheme}>
-            <View style={cardTheme.header}>
+        <View style={cardStyle.component}>
+            <View style={cardStyle.headerComponent}>
                 {header}
             </View>
             {children}
@@ -30,7 +30,7 @@ export const Card = ({header, children}: CardProps) => {
 interface CardBasicProps {
     description: string,
     children: ReactNode
-};
+}
 
 export const CardBasic = ({description, children}: CardBasicProps) => {
     return (

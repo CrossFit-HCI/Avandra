@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { colorTheme, borderTheme } from "../theme/theme";
+import { colorTheme, borderTheme } from "../designFramework/theme";
 
 export const navContainerViewStyle = (isNavOpened: boolean) => {
     // Used to hide and show part of the Nav; this mimics the Nav being open or

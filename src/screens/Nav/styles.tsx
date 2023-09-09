@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import { colorTheme, borderTheme } from "../theme/theme";
-import { navControlButtonTheme } from "../theme/Button";
+import { colorTheme, borderTheme } from "../../designFramework/theme";
+import { navControlButtonTheme } from "../../designFramework/Button";
 
 let navHeight: number = 50;
 
