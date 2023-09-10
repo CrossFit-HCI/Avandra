@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { borderTheme, iconTheme } from '../../designFramework/theme';
+import { borderTheme, iconTheme } from '../../designFramework/DF';
 
 export const iconStyle = {
     size: iconTheme.secondarySize,

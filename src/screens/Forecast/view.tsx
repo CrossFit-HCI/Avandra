@@ -3,8 +3,7 @@ import { Pressable, Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Nav, { NavScreen, NaviButton } from '../Nav/view';
-import { CloseNavModal } from '../Nav/model';
+import Nav, { ControlButtonNav } from '../Nav/view';
 import { navCustomViewStyleSheet } from '../Nav/styles';
 
 import { RootViews } from '../../RootViews';
@@ -15,16 +14,6 @@ import { Journal, TrainingBlock, getJournal } from '../../model/model';
 import { Hrule } from '../../theme/Hrule/view';
 
 type ForecastScreenProps = NativeStackScreenProps<RootViews, 'Forecast'>;
-
-const ModalScreen = () => {
-  return (
-    <View>
-      <Text style={ forecastStyle.heading1 }>I'm a modal.</Text>
-
-      <CloseNavModal title='Close Modal1'/>
-    </View>
-  );
-};
 
 const CardForecastHeader = (journalTitle: string, markCompleted: boolean) => { 
   const cardTheme = forecastStyle.component.card;  
@@ -87,7 +76,7 @@ const Forecast = ({ navigation }: ForecastScreenProps) => {
   const navMainScreen = () => {
     return (
       <View style={navCustomViewStyleSheet.container}>
-        <NaviButton
+        <ControlButtonNav
           onPress={() => navigation.navigate('Journals')}
           title="Journals" />         
       </View>
@@ -95,9 +84,7 @@ const Forecast = ({ navigation }: ForecastScreenProps) => {
   };
 
   const journal: Journal = getJournal();
-
-  /* How to open a modal: 
-   * <OpenNavModal label='Modal1' title="Open Modal1" />  */
+  
   return (
       <View style={ forecastStyle.component }> 
         <Text style={{fontSize: 35}}>Today (09/06)</Text>
@@ -105,7 +92,6 @@ const Forecast = ({ navigation }: ForecastScreenProps) => {
         <CardForecast journal={journal} />
 
         <Nav main={navMainScreen()}>
-            <NavScreen label='Modal1'  screen={ModalScreen()} />
         </Nav>                
       </View>
   );

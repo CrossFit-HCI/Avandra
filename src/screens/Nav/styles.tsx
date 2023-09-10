@@ -1,14 +1,13 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
-import { colorTheme, borderTheme } from "../../designFramework/theme";
-import { navControlButtonTheme } from "../../designFramework/Button";
+import { colorDF, borderTheme } from '../../designFramework/DF';
 
-let navHeight: number = 50;
+const navHeight: number = 50;
 
 export const navComponentStyleSheet = (isNavOpened: boolean) => {
     // Used to hide and show part of the Nav; this mimics the Nav being open or
     // closed.    
-    let navBottom: number = isNavOpened ? 0 : -43;
+    const navBottom: number = isNavOpened ? 0 : -43;
     
     return StyleSheet.create({
         container: {  
@@ -16,7 +15,7 @@ export const navComponentStyleSheet = (isNavOpened: boolean) => {
             height: `${navHeight}%`,
             width: '100%',
             alignContent: 'flex-end',
-            backgroundColor: colorTheme.component.background,
+            backgroundColor: colorDF.component.background,
             position: 'absolute',
             bottom: `${navBottom}%`,
             borderTopColor: borderTheme.component.borderColor,
@@ -31,11 +30,6 @@ export const navCustomViewStyleSheet = StyleSheet.create({
         padding: 3,
         width: '100%',       
     }
-});
-
-export const navComponentButtonStyleSheet = StyleSheet.create({
-    primaryContainer: navControlButtonTheme.container,
-    primaryText: navControlButtonTheme.text
 });
 
 export const navBarStyleSheet = StyleSheet.create({
@@ -55,21 +49,5 @@ export const navBarStyleSheet = StyleSheet.create({
         height: 30,
         padding: 5,
         borderWidth: borderTheme.component.borderWidth        
-    }
-});
-
-export const navBarButtonStyleSheet = StyleSheet.create({
-    primaryContainer: {
-        flex: 1,
-        height: 30,
-        width: 78,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 1
-    },
-    primaryText: {
-        color: 'white',
-        fontSize: 18,        
     }
 });

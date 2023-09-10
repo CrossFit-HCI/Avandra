@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colorTheme, fontTheme } from '../../designFramework/theme';
+import { colorDF, fontTheme } from '../../designFramework/DF';
 
 import { cardStyle } from '../../theme/Card/styles';
 
@@ -12,7 +12,7 @@ export const forecastStyle = StyleSheet.create({
             justifyContent: 'flex-start',
             paddingTop: 30,
             alignItems: 'center',
-            backgroundColor: colorTheme.component.background,
+            backgroundColor: colorDF.component.background,
             card: cardStyle
         },
 

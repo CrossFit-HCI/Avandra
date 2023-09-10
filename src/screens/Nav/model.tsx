@@ -1,12 +1,10 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import React, { Children, JSXElementConstructor, ReactElement, ReactNode } from 'react';
-import { Button, GestureResponderEvent, Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Maybe, just, nothing } from '@heades/fp-lib';
 import { BinTree, empty, insert, lookup, mkKeyString } from '@heades/fp-lib';
-
-import { navBarButtonStyleSheet, navComponentButtonStyleSheet } from './styles';
 
 interface NavOpened {
     status: 'opened';
@@ -256,88 +254,6 @@ export const getNavScreen = (context: NavContext, state: RootState): ReactNode =
             }
         }        
     }
-};
-
-/****************************************************
- *  Components for utilizing the store and context. *
- ****************************************************/
-
-/**
- * The type of props for Nav buttons.
- */
-interface NavButtonProps {
-    /** The title of the button. */
-    title: string;
-    /** The call back for when the button is pressed. */
-    onPress: (event: GestureResponderEvent) => void;
-}
-
-/**
- * A button for navigating to a new screen.
- * @param props - A `NavButtonProps`.
- * @returns A RN Button with the onPress callback wrapped to manage the state of
- * the Nav properly.
- */
-export const NaviButton = (props: NavButtonProps) => {
-    const dispatch = useAppDispatch();
-    const closeTheNav = () => dispatch(closeNav());
-    
-    const onPressCallback = (event: GestureResponderEvent) => {
-        // Make sure the Nav is closed before transitioning to a new screen.
-        closeTheNav();
-        props.onPress(event);
-    };
-
-    return (
-        <Pressable onPress={onPressCallback} style={navComponentButtonStyleSheet.primaryContainer}>
-            <Text style={navComponentButtonStyleSheet.primaryText}>{props.title}</Text>
-        </Pressable>
-    );
-};
-
-export const NavBarButton = (props: NavButtonProps) => {    
-    const onPressCallback = (event: GestureResponderEvent) => {
-        props.onPress(event);
-    };
-
-    return (
-        <Pressable onPress={onPressCallback} style={navBarButtonStyleSheet.primaryContainer}>
-            <Text style={navBarButtonStyleSheet.primaryText}>{props.title}</Text>
-        </Pressable>
-    );
-};
-
-interface OpenModalProps {
-    title: string,
-    label: string
-}
-
-export const OpenNavModal = (props: OpenModalProps) => {
-    const dispatch = useAppDispatch();
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const onPressCallback = (event: GestureResponderEvent) => {
-        // Switch the current Nav screen to the modal with label.
-        dispatch(injectScreen(props.label));
-    };
-
-    return (
-        <Button title={props.title} onPress={onPressCallback} />
-    );
-};
-
-export const CloseNavModal = (props: {title: string}) => {
-    const dispatch = useAppDispatch();
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const onPressCallback = (event: GestureResponderEvent) => {
-        // Switch the current Nav screen to the modal with label.
-        dispatch(ejectScreen());
-    };
-
-    return (
-        <Button title={props.title} onPress={onPressCallback} />
-    );
 };
 
 export interface NavProviderProps {

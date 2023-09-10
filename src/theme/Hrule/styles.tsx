@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { colorTheme } from '../../designFramework/theme';
+import { colorDF } from '../../designFramework/DF';
 
 export const hruleStyle = StyleSheet.create({
     component: {
-        backgroundColor: colorTheme.border.primary, 
+        backgroundColor: colorDF.border.primary, 
         width: '100%', 
         height: 1
     }
